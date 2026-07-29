@@ -1,0 +1,23 @@
+{
+  "schema_version": "cinemadna.acting_beats.v1",
+  "shot_id": "EP001_SC001_SH007",
+  "scene_id": "EP001_SC001",
+  "shot_type": "CLOSEUP",
+  "emotion_intensity": 1.0,
+  "beats": [
+    {
+      "beat_index": 0,
+      "type": "ACTION",
+      "character_id": "char_linwan",
+      "cue": "沉默中的动作",
+      "micro_expression": {
+        "primary": "下颌收紧，视线避开对方",
+        "secondary": "眉心微锁但目光不移",
+        "physiological": "呼吸加快，瞳孔收缩",
+        "scale": "微表情主导，肢体几乎不动",
+        "intensity": 1.0
+      },
+      "body": "缓慢转身/停顿"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "cinemadna.consistency_report.v1",
+  "passed": true,
+  "issues": [],
+  "structural_issues": [],
+  "low_score_issues": [],
+  "thresholds": {
+    "identity": 0.75,
+    "scene": 0.7
+  },
+  "scores_are_mock": true,
+  "checked_at": "2026-07-23T15:52:17Z"
+}

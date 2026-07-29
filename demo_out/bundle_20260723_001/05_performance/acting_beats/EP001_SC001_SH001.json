@@ -1,0 +1,23 @@
+{
+  "schema_version": "cinemadna.acting_beats.v1",
+  "shot_id": "EP001_SC001_SH001",
+  "scene_id": "EP001_SC001",
+  "shot_type": "MEDIUM",
+  "emotion_intensity": 0.8379,
+  "beats": [
+    {
+      "beat_index": 0,
+      "type": "LINE",
+      "character_id": "char_linwan",
+      "cue": "我没有退路了。",
+      "micro_expression": {
+        "primary": "下颌收紧，视线避开对方",
+        "secondary": "眉心微锁但目光不移",
+        "physiological": "眉心微锁，吞咽一次",
+        "scale": "肢体与走位主导，表情适度",
+        "intensity": 0.8379
+      },
+      "body": "说话时手指收紧"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "cinemadna.workorder.v1",
+  "workorder_id": "wo_scenedna_0001",
+  "workorder_type": "SCENE",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "task_id": "task_scenedna_0001",
+  "asset_hash": null,
+  "status": "BACKFLOWED",
+  "priority": "normal",
+  "created_at": "2026-07-23T15:52:13Z",
+  "updated_at": "2026-07-23T15:52:13Z",
+  "requested_by": "scriptbrain",
+  "requirement": {
+    "scene_id": "EP001_SC001",
+    "location_description": "县城老旧出租屋",
+    "time_of_day": "深夜",
+    "mood": "压抑、疲惫",
+    "camera_intent": "中近景，压迫感",
+    "required_atoms": [
+      "室内布局",
+      "光线",
+      "家具陈设",
+      "窗户"
+    ],
+    "spatial_needs": "可支持人物走动与特写",
+    "must_be_natural": true
+  },
+  "internal_search_result": {
+    "found": false,
+    "matched_asset_ids": [],
+    "similarity_scores": []
+  },
+  "generation_plan": {
+    "search_sources": [
+      "internal_db",
+      "authorized_public"
+    ],
+    "atom_extraction_needed": true,
+    "layout_recompose": true,
+    "3d_support": false,
+    "mock_mode": true,
+    "source_kind": "natural_atom_recompose"
+  },
+  "gate_report": {
+    "schema_version": "cinemadna.scene_gate.v1",
+    "gate_id": "gate_scene_0001",
+    "workorder_id": "wo_scenedna_0001",
+    "passed": true,
+    "scores": {
+      "naturalness": 0.9093,
+      "script_match": 0.7807,
+      "layout_usability": 0.7473,
+      "rights_risk": 0.0199
+    },
+    "issues": [],
+    "human_review_required": false,
+    "decided_at": "2026-07-23T15:52:13Z",
+    "decided_by": "auto_gate"
+  },
+  "result_asset_ids": [
+    "scene_layout_wo_scenedna_0001"
+  ],
+  "backflow_record_id": "bf_scene_0001",
+  "error": null
+}

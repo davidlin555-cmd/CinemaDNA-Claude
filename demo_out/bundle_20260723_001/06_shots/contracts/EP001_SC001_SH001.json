@@ -1,0 +1,110 @@
+{
+  "schema_version": "cinemadna.shot_contract.v1",
+  "shot_id": "EP001_SC001_SH001",
+  "scene_id": "EP001_SC001",
+  "episode_id": "EP001",
+  "order": 1,
+  "shot_type": "MEDIUM",
+  "status": "PERFORMANCE_READY",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "task_id": "task_shot_0001",
+  "asset_hash": null,
+  "camera": {
+    "shot_size": "中景",
+    "movement": "固定",
+    "angle": "平视",
+    "lens_mm": 35,
+    "intent": "中近景，压迫感｜中景固定"
+  },
+  "duration_sec": 5.6,
+  "emotion": {
+    "beat": "CONFLICT",
+    "intensity": 0.8379,
+    "mood": "压抑、疲惫"
+  },
+  "assets": {
+    "scene": {
+      "scene_id": "EP001_SC001",
+      "asset_id": "scene_layout_wo_scenedna_0001",
+      "asset_hash": "sha256:91260e3e395e7b8c6f908a908a090721ab858e1d2407f92e5277a4157074723f",
+      "gate_passed": true,
+      "asset_type": "COMPOSED_LAYOUT",
+      "tags": [
+        "县城老旧出租屋",
+        "深夜",
+        "压抑",
+        "疲惫"
+      ]
+    },
+    "characters": [
+      {
+        "character_id": "char_linwan",
+        "master_pack_id": "cmp_0001",
+        "base_face_asset_id": "face_wo_identitydna_0001_base",
+        "asset_hash": "sha256:501830661aa3b3bcc06e28ea5c838f264035cb94329fa3baa19b68baeca4eaa2",
+        "gate_passed": true,
+        "age_line": {
+          "25": "face_wo_identitydna_0001_base_age25",
+          "35": "face_wo_identitydna_0001_base_age35",
+          "50": "face_wo_identitydna_0001_base_age50"
+        }
+      }
+    ],
+    "props": [
+      {
+        "prop_id": "prop_hospital_bill",
+        "state": "完整",
+        "asset_id": "prop_prop_hospital_bill_00",
+        "asset_hash": "sha256:9bf9568c475adae57bbeca8d2eb95aaa7fc1fdeaa2ce7fdc4949893750c00163",
+        "gate_passed": true
+      }
+    ]
+  },
+  "performance": {
+    "acting_beats": [
+      {
+        "beat_index": 0,
+        "type": "LINE",
+        "character_id": "char_linwan",
+        "cue": "我没有退路了。",
+        "micro_expression": {
+          "primary": "下颌收紧，视线避开对方",
+          "secondary": "眉心微锁但目光不移",
+          "physiological": "眉心微锁，吞咽一次",
+          "scale": "肢体与走位主导，表情适度",
+          "intensity": 0.8379
+        },
+        "body": "说话时手指收紧"
+      }
+    ],
+    "blocking": {
+      "schema_version": "cinemadna.acting_beats.v1",
+      "scene_id": "EP001_SC001",
+      "spatial_needs": "可支持人物走动与特写",
+      "positions": [
+        {
+          "character_id": "char_linwan",
+          "mark": "A",
+          "movement": "从画左入画后停在中景位"
+        }
+      ],
+      "camera_relation": "中近景，压迫感"
+    },
+    "performance_bible_refs": [
+      "char_linwan"
+    ]
+  },
+  "dialogue": [
+    {
+      "character_id": "char_linwan",
+      "line": "我没有退路了。"
+    }
+  ],
+  "difficulty": "normal",
+  "notes": "",
+  "created_at": "2026-07-23T15:52:13Z",
+  "signed_at": "2026-07-23T15:52:13Z",
+  "contract_hash": "sha256:84009f4f116d81677ce9b74ac34eadf203dc7bce2c0a173c0eb86f238a07efdb",
+  "render_result": null
+}

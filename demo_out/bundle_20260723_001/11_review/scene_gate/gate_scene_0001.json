@@ -1,0 +1,16 @@
+{
+  "schema_version": "cinemadna.scene_gate.v1",
+  "gate_id": "gate_scene_0001",
+  "workorder_id": "wo_scenedna_0001",
+  "passed": true,
+  "scores": {
+    "naturalness": 0.9093,
+    "script_match": 0.7807,
+    "layout_usability": 0.7473,
+    "rights_risk": 0.0199
+  },
+  "issues": [],
+  "human_review_required": false,
+  "decided_at": "2026-07-23T15:52:13Z",
+  "decided_by": "auto_gate"
+}

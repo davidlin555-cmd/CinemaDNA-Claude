@@ -1,0 +1,73 @@
+{
+  "schema_version": "cinemadna.continuity_ledger.v1",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "shot_count": 8,
+  "prop_states": {
+    "prop_hospital_bill": [
+      {
+        "shot_id": "EP001_SC001_SH001",
+        "scene_id": "EP001_SC001",
+        "order": 1,
+        "state": "完整",
+        "asset_id": "prop_prop_hospital_bill_00"
+      },
+      {
+        "shot_id": "EP001_SC001_SH005",
+        "scene_id": "EP001_SC001",
+        "order": 5,
+        "state": "完整",
+        "asset_id": "prop_prop_hospital_bill_00"
+      }
+    ]
+  },
+  "character_packs": {
+    "char_linwan": {
+      "master_pack_ids": [
+        "cmp_0001",
+        "cmp_0001",
+        "cmp_0001",
+        "cmp_0001",
+        "cmp_0001",
+        "cmp_0001",
+        "cmp_0001",
+        "cmp_0001"
+      ],
+      "shots": [
+        "EP001_SC001_SH001",
+        "EP001_SC001_SH002",
+        "EP001_SC001_SH003",
+        "EP001_SC001_SH004",
+        "EP001_SC001_SH005",
+        "EP001_SC001_SH006",
+        "EP001_SC001_SH007",
+        "EP001_SC001_SH008"
+      ]
+    }
+  },
+  "scene_assets": {
+    "EP001_SC001": {
+      "asset_ids": [
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001",
+        "scene_layout_wo_scenedna_0001"
+      ],
+      "shots": [
+        "EP001_SC001_SH001",
+        "EP001_SC001_SH002",
+        "EP001_SC001_SH003",
+        "EP001_SC001_SH004",
+        "EP001_SC001_SH005",
+        "EP001_SC001_SH006",
+        "EP001_SC001_SH007",
+        "EP001_SC001_SH008"
+      ]
+    }
+  },
+  "updated_at": "2026-07-23T15:52:13Z"
+}

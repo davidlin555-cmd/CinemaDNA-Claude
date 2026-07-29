@@ -1,0 +1,15 @@
+{
+  "schema_version": "cinemadna.repair_plan.v1",
+  "story_id": "drama_0001",
+  "verdict": "PASS",
+  "target_stage": null,
+  "reason": "镜头级质检全部通过",
+  "affected_shots": [],
+  "story_wide": false,
+  "scope": "SHOTS",
+  "shots_total": 8,
+  "shots_to_redo": 0,
+  "root_causes": [],
+  "blocking_issues": 0,
+  "planned_at": "2026-07-23T15:52:17Z"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "cinemadna.character_master_pack.v1",
+  "character_id": "char_linwan",
+  "master_pack_id": "cmp_0001",
+  "base_face_asset_id": "face_wo_identitydna_0001_base",
+  "age_line": {
+    "25": "face_wo_identitydna_0001_base_age25",
+    "35": "face_wo_identitydna_0001_base_age35",
+    "50": "face_wo_identitydna_0001_base_age50"
+  },
+  "family_pack": {},
+  "expression_baseline": [
+    "neutral",
+    "sorrow",
+    "restrained_anger"
+  ],
+  "reusable": true,
+  "gate_passed": true,
+  "backflow_at": "2026-07-23T15:52:13Z",
+  "asset_hash": "sha256:501830661aa3b3bcc06e28ea5c838f264035cb94329fa3baa19b68baeca4eaa2",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001"
+}
