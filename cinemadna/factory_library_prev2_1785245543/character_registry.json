@@ -1,0 +1,50 @@
+{
+  "char_linwan": {
+    "schema_version": "cinemadna.character_master_pack.v1",
+    "character_id": "char_linwan",
+    "master_pack_id": "cmp_0001",
+    "base_face_asset_id": "face_wo_identitydna_0001_base",
+    "base_face_image": "02_cast/char_linwan/face.jpg",
+    "is_real_image": true,
+    "generation_method": "synthetic_text2image",
+    "age_line": {
+      "25": "face_wo_identitydna_0001_base_age25",
+      "35": "face_wo_identitydna_0001_base_age35",
+      "50": "face_wo_identitydna_0001_base_age50"
+    },
+    "family_pack": {},
+    "expression_baseline": [
+      "neutral",
+      "sorrow",
+      "restrained_anger"
+    ],
+    "reusable": true,
+    "gate_passed": true,
+    "backflow_at": "2026-07-28T05:54:02Z",
+    "asset_hash": "sha256:65c9dc605416ecd67c04e67dabafbb2ce96016b5a62b4bf3a11ffe92d3ed2486",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001"
+  },
+  "char_zhaosheng": {
+    "schema_version": "cinemadna.character_master_pack.v1",
+    "character_id": "char_zhaosheng",
+    "master_pack_id": "cmp_0002",
+    "base_face_asset_id": "face_wo_identitydna_0002_base",
+    "base_face_image": "02_cast/char_zhaosheng/face.jpg",
+    "is_real_image": true,
+    "generation_method": "synthetic_text2image",
+    "age_line": {},
+    "family_pack": {},
+    "expression_baseline": [
+      "neutral",
+      "sorrow",
+      "restrained_anger"
+    ],
+    "reusable": true,
+    "gate_passed": true,
+    "backflow_at": "2026-07-28T05:54:02Z",
+    "asset_hash": "sha256:963cca2e362f3a55914e3fc15d09329a8508788b38f14a3aa30e2edb29832f53",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001"
+  }
+}

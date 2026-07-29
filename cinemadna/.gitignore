@@ -1,0 +1,33 @@
+# 密钥：绝不提交 .env，只提交模板 .env.example
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# 运行产物（所有 workspace_* 生成物：合约/首帧/渲染/成片，可再生，不入库）
+workspace/
+workspace_*/
+demo_out/
+kling_test/
+scratchpad/
+*.log
+*.mp4
+*.mp3
+*.wav
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# 工厂资产库(跨生产持久化,可再生)
+factory_library/
