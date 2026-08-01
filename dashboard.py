@@ -44,31 +44,42 @@ def toggle_engine():
         return "🔴 引擎已关闭 (Stopped)"
 
 
-def run_mock_loop():
+def run_mock_loop(story_prompt):
     logs = ""
     def log(msg):
         nonlocal logs
         logs += msg + "\n"
         return logs
 
-    yield log("\n--- 1. 大脑下发 (Phase 3 Real Bridge) ---")
+    yield log(f"输入的一句话剧本: {story_prompt}")
+    yield log("\n--- 1. 大脑下发 (Phase 3 Real Bridge + LLM) ---")
     time.sleep(0.5)
 
     script_brain = ScriptBrainMicroDismantler()
-    fake_script_data = {
-        "scene": 1,
-        "action": "argue",
-        "character": {
-            "name": "主角A",
-            "age": 25,
-            "style": "realistic"
-        }
-    }
-    sb_result = script_brain.dismantle(fake_script_data)
-    yield log(f"ScriptBrain 桥接返回: {sb_result.get('message')}")
 
-    workorder_json = json.dumps({"shot_id": "SH-001", "requirements": fake_script_data}, ensure_ascii=False)
-    yield log(f"生成 1 个镜头的假 JSON 工单: {workorder_json}")
+    yield log("正在请求大模型拆解剧本 (如果配置了 API Key，将调用真实 LLM)...")
+    sb_result = script_brain.dismantle(story_prompt)
+    yield log(f"ScriptBrain 桥接返回状态: {sb_result.get('message')}")
+
+    # 获取拆解出来的数据，如果没有配置LLM或者报错，给一个兜底结构
+    dismantled_data = sb_result.get("data", [])
+    if not dismantled_data:
+         dismantled_data = [{
+            "shot_id": "SH-001",
+            "scene_prompt": "A default arguing scene",
+            "action": "argue",
+            "character_details": {
+                "name": "主角A",
+                "age": 25,
+                "style": "realistic"
+            }
+        }]
+
+    # 这里我们只取第一个镜头往下流转作为展示
+    fake_script_data = dismantled_data[0]
+
+    workorder_json = json.dumps(dismantled_data, ensure_ascii=False, indent=2)
+    yield log(f"\n大模型生成的完整 JSON 工单流:\n{workorder_json}\n")
     time.sleep(0.5)
 
     yield log("\n--- 2. 导演调度 ---")
@@ -160,14 +171,19 @@ with gr.Blocks(title="CinemaDNA (DramaOS) Web Dashboard") as app:
 
         with gr.Column():
             gr.Markdown("### 流水线调度室 (Pipeline Control)")
-            run_loop_btn = gr.Button("触发一键空转测试 (Run Mock Loop)", variant="primary")
+            story_prompt_input = gr.Textbox(
+                label="一句话剧本输入框 (Story Prompt Input)",
+                value="男主角在暴雨中跪在女主家门前，请求原谅，气氛压抑。",
+                lines=2
+            )
+            run_loop_btn = gr.Button("触发流水线 (Run Pipeline)", variant="primary")
 
     gr.Markdown("### 实时日志窗口 (Real-time Log Viewer)")
     log_output = gr.Textbox(label="Logs", lines=20, max_lines=30, interactive=False)
 
     # Event handlers
     toggle_engine_btn.click(fn=toggle_engine, outputs=engine_status_text)
-    run_loop_btn.click(fn=run_mock_loop, outputs=log_output)
+    run_loop_btn.click(fn=run_mock_loop, inputs=story_prompt_input, outputs=log_output)
 
 if __name__ == "__main__":
     app.launch()
