@@ -55,7 +55,16 @@ def run_mock_loop():
     time.sleep(0.5)
 
     script_brain = ScriptBrainMicroDismantler()
-    fake_script_data = {"scene": 1, "action": "argue"}
+    # Updated fake_script_data to include character parameters for Phase 3 integration
+    fake_script_data = {
+        "scene": 1,
+        "action": "argue",
+        "character": {
+            "name": "主角A",
+            "age": 25,
+            "style": "realistic"
+        }
+    }
     workorder_json = json.dumps({"shot_id": "SH-001", "requirements": fake_script_data}, ensure_ascii=False)
     yield log(f"ScriptBrain 生成了 1 个镜头的假 JSON 工单: {workorder_json}")
     time.sleep(0.5)
@@ -75,8 +84,9 @@ def run_mock_loop():
     scene_dna.compose_layout(fake_script_data)
     time.sleep(0.3)
 
-    yield log("正在调用 IdentityDNA 融合人脸...")
-    identity_dna.generate_fusion(fake_script_data, [])
+    yield log("正在调用 IdentityDNA 融合人脸 (Phase 3 Real Bridge)...")
+    identity_result = identity_dna.generate_fusion(fake_script_data, [])
+    yield log(f"IdentityDNA 桥接返回: {identity_result['message']}")
     time.sleep(0.3)
 
     yield log("正在调用 PropDNA 生成连续道具...")
