@@ -51,11 +51,10 @@ def run_mock_loop():
         logs += msg + "\n"
         return logs
 
-    yield log("--- 1. 大脑下发 ---")
+    yield log("\n--- 1. 大脑下发 (Phase 3 Real Bridge) ---")
     time.sleep(0.5)
 
     script_brain = ScriptBrainMicroDismantler()
-    # Updated fake_script_data to include character parameters for Phase 3 integration
     fake_script_data = {
         "scene": 1,
         "action": "argue",
@@ -65,8 +64,11 @@ def run_mock_loop():
             "style": "realistic"
         }
     }
+    sb_result = script_brain.dismantle(fake_script_data)
+    yield log(f"ScriptBrain 桥接返回: {sb_result.get('message')}")
+
     workorder_json = json.dumps({"shot_id": "SH-001", "requirements": fake_script_data}, ensure_ascii=False)
-    yield log(f"ScriptBrain 生成了 1 个镜头的假 JSON 工单: {workorder_json}")
+    yield log(f"生成 1 个镜头的假 JSON 工单: {workorder_json}")
     time.sleep(0.5)
 
     yield log("\n--- 2. 导演调度 ---")
@@ -80,25 +82,29 @@ def run_mock_loop():
     perf_dna = PerformanceDNA()
     vocal_dna = VocalDNA()
 
-    yield log("正在调用 SceneDNA 拼接场景...")
-    scene_dna.compose_layout(fake_script_data)
+    yield log("正在调用 SceneDNA 拼接场景 (Phase 3 Real Bridge)...")
+    scene_result = scene_dna.compose_layout(fake_script_data)
+    yield log(f"SceneDNA 桥接返回: {scene_result.get('message')}")
     time.sleep(0.3)
 
     yield log("正在调用 IdentityDNA 融合人脸 (Phase 3 Real Bridge)...")
     identity_result = identity_dna.generate_fusion(fake_script_data, [])
-    yield log(f"IdentityDNA 桥接返回: {identity_result['message']}")
+    yield log(f"IdentityDNA 桥接返回: {identity_result.get('message')}")
     time.sleep(0.3)
 
-    yield log("正在调用 PropDNA 生成连续道具...")
-    prop_dna.synthesize_prop(fake_script_data)
+    yield log("正在调用 PropDNA 生成连续道具 (Phase 3 Real Bridge)...")
+    prop_result = prop_dna.synthesize_prop(fake_script_data)
+    yield log(f"PropDNA 桥接返回: {prop_result.get('message')}")
     time.sleep(0.3)
 
-    yield log("正在调用 PerformanceDNA 检索并拼接微表情...")
-    perf_dna.retrieve_and_stitch("beat1", {})
+    yield log("正在调用 PerformanceDNA 检索并拼接微表情 (Phase 3 Real Bridge)...")
+    perf_result = perf_dna.retrieve_and_stitch("beat1", {})
+    yield log(f"PerformanceDNA 桥接返回: {perf_result.get('message')}")
     time.sleep(0.3)
 
-    yield log("正在调用 VocalDNA 合成情绪声音...")
-    vocal_dna.synthesize_voice("Hello", {})
+    yield log("正在调用 VocalDNA 合成情绪声音 (Phase 3 Real Bridge)...")
+    vocal_result = vocal_dna.synthesize_voice("Hello", {})
+    yield log(f"VocalDNA 桥接返回: {vocal_result.get('message')}")
     time.sleep(0.5)
 
     yield log("\n--- 3. 触发 QA 闭环 (Infinity QA Loop) ---")
@@ -129,6 +135,15 @@ def run_mock_loop():
         yield log("成绩合格，开始强制回流 (Backflow)...")
         backflow.backflow({"asset_id": "SH-001-final"})
         yield log("资产已成功存入数据库")
+
+        # 强制输出样片到 demo_out 目录
+        out_dir = "demo_out"
+        os.makedirs(out_dir, exist_ok=True)
+        demo_file = os.path.join(out_dir, "SH-001-final_demo.json")
+        with open(demo_file, "w", encoding="utf-8") as f:
+            json.dump({"shot_id": "SH-001", "status": "rendered and approved", "score": score_2}, f, ensure_ascii=False)
+        yield log(f"【渲染完成】样片已输出至本地目录: {demo_file}")
+
         time.sleep(0.5)
 
     yield log("\n--- 测试流程结束 ---")

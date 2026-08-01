@@ -1,9 +1,0 @@
-{
-  "schema_version": "cinemadna.performance_qa.v1",
-  "agent": "performance",
-  "shots_checked": 8,
-  "passed": true,
-  "issues": [],
-  "blocking_count": 0,
-  "checked_at": "2026-07-23T15:52:17Z"
-}
