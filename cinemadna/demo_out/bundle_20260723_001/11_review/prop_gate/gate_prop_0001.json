@@ -1,0 +1,16 @@
+{
+  "schema_version": "cinemadna.prop_gate.v1",
+  "gate_id": "gate_prop_0001",
+  "workorder_id": "wo_propdna_0001",
+  "passed": true,
+  "scores": {
+    "naturalness": 0.7918,
+    "script_match": 0.9423,
+    "state_consistency": 1.0,
+    "rights_risk": 0.0531
+  },
+  "issues": [],
+  "human_review_required": false,
+  "decided_at": "2026-07-23T15:52:13Z",
+  "decided_by": "auto_gate"
+}

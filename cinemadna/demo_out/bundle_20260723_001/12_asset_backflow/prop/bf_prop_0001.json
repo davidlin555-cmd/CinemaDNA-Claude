@@ -1,0 +1,17 @@
+{
+  "schema_version": "cinemadna.prop_backflow.v1",
+  "backflow_id": "bf_prop_0001",
+  "prop_id": "prop_hospital_bill",
+  "workorder_id": "wo_propdna_0001",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "asset_hash": "sha256:9bf9568c475adae57bbeca8d2eb95aaa7fc1fdeaa2ce7fdc4949893750c00163",
+  "asset_ids_by_state": {
+    "完整": "prop_prop_hospital_bill_00"
+  },
+  "gate_passed": true,
+  "reusable": true,
+  "continuity_supported": true,
+  "quality_score": 0.867,
+  "created_at": "2026-07-23T15:52:13Z"
+}

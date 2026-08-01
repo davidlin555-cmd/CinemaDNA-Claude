@@ -1,0 +1,38 @@
+{
+  "schema_version": "cinemadna.rendered_shot.v1",
+  "shot_id": "EP001_SC001_SH001",
+  "task_id": "task_shot_0001",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "contract_hash": "sha256:84009f4f116d81677ce9b74ac34eadf203dc7bce2c0a173c0eb86f238a07efdb",
+  "model": "local-video-v1",
+  "backend": "placeholder-media",
+  "file_relpath": "09_downloads/task_shot_0001/EP001_SC001_SH001.mp4",
+  "media_type": "video/mp4",
+  "is_real_media": true,
+  "duration_sec": 5.6,
+  "fps": 24,
+  "resolution": "1080x1920",
+  "seed": 68735455,
+  "prompt": "县城老旧出租屋，深夜，压抑，疲惫。中景·固定·平视，中近景，压迫感｜中景固定。情绪强度 0.8379，下颌收紧，视线避开对方。",
+  "reference_hashes": {
+    "scene": "sha256:91260e3e395e7b8c6f908a908a090721ab858e1d2407f92e5277a4157074723f",
+    "characters": {
+      "char_linwan": "sha256:501830661aa3b3bcc06e28ea5c838f264035cb94329fa3baa19b68baeca4eaa2"
+    },
+    "props": {
+      "prop_hospital_bill": "sha256:9bf9568c475adae57bbeca8d2eb95aaa7fc1fdeaa2ce7fdc4949893750c00163"
+    }
+  },
+  "metrics": {
+    "identity_consistency": 0.9097,
+    "scene_consistency": 0.9179,
+    "motion_quality": 0.8623,
+    "mock": true,
+    "media_bytes": 30189
+  },
+  "generated_at": "2026-07-23T15:52:14Z",
+  "is_generated_footage": false,
+  "placeholder": true,
+  "asset_hash": "sha256:7554d28329828f8925958cdcd470f17effc8522aac174f4363535dc32793f26e"
+}

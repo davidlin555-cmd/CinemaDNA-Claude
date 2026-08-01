@@ -1,0 +1,20 @@
+{
+  "workorder_id": "wo_propdna_0001",
+  "prop_id": "prop_hospital_bill",
+  "name": "医院缴费单",
+  "asset_ids_by_state": {
+    "完整": "prop_prop_hospital_bill_00"
+  },
+  "base_asset_id": "prop_prop_hospital_bill_00",
+  "sources_used": [
+    "internal_db",
+    "synthetic"
+  ],
+  "real_brand_marks": [],
+  "naturalness": 0.7918,
+  "script_match": 0.9423,
+  "rights_risk": 0.0531,
+  "state_timeline": [],
+  "mock_mode": true,
+  "asset_hash": "sha256:9bf9568c475adae57bbeca8d2eb95aaa7fc1fdeaa2ce7fdc4949893750c00163"
+}

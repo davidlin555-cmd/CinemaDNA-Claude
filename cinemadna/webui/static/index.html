@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CinemaDNA 工厂控制台</title>
+<style>
+  :root{
+    --bg:#0e0f14; --panel:#171923; --panel2:#1e2130; --line:#2a2e42;
+    --fg:#e8e9f0; --dim:#9aa0b5; --accent:#e0a458; --ok:#4cc38a;
+    --warn:#e5a83c; --bad:#e5484d; --info:#5b8def;
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+       font-family:"Microsoft YaHei",system-ui,-apple-system,sans-serif;font-size:14px}
+  header{display:flex;align-items:center;gap:16px;padding:12px 20px;
+         background:var(--panel);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+  header h1{font-size:16px;margin:0;letter-spacing:.5px}
+  .tabs{display:flex;gap:4px;margin-left:12px}
+  .tab{padding:7px 16px;border-radius:6px;cursor:pointer;color:var(--dim);border:1px solid transparent}
+  .tab:hover{color:var(--fg);background:var(--panel2)}
+  .tab.on{background:var(--panel2);color:var(--accent);border-color:var(--line)}
+  #ws{margin-left:auto;color:var(--dim);font-size:12px;text-align:right}
+  main{padding:18px 20px;max-width:1500px;margin:0 auto}
+  section{display:none} section.on{display:block}
+  .grid{display:grid;gap:14px}
+  .cards{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px}
+  .card h3{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;color:var(--dim);font-size:12.5px}
+  .kv b{color:var(--fg);font-weight:500}
+  .pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;
+        border:1px solid var(--line);background:var(--panel2);white-space:nowrap}
+  .pill.ok{color:var(--ok);border-color:#26543f}
+  .pill.warn{color:var(--warn);border-color:#5c4620}
+  .pill.bad{color:var(--bad);border-color:#5e2326}
+  .pill.info{color:var(--info);border-color:#25406e}
+  button{background:var(--accent);color:#141414;border:0;border-radius:6px;
+         padding:7px 14px;font-size:13px;cursor:pointer;font-family:inherit}
+  button:hover{filter:brightness(1.08)}
+  button:disabled{background:#3a3d4d;color:#777c8f;cursor:not-allowed}
+  button.ghost{background:var(--panel2);color:var(--fg);border:1px solid var(--line)}
+  button.danger{background:var(--bad);color:#fff}
+  button.good{background:var(--ok);color:#0b2019}
+  input,select,textarea{background:var(--panel2);border:1px solid var(--line);
+        color:var(--fg);border-radius:6px;padding:7px 10px;font-family:inherit;font-size:13px;width:100%}
+  textarea{min-height:64px;resize:vertical}
+  label{display:block;color:var(--dim);font-size:12px;margin:8px 0 3px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:500;position:sticky;top:53px;background:var(--panel)}
+  tr:hover td{background:#1b1e2b}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--dim)}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+  pre{background:#0b0c11;border:1px solid var(--line);border-radius:8px;padding:12px;
+      overflow:auto;max-height:340px;font-size:12px;line-height:1.55}
+  video{width:100%;max-width:420px;border-radius:10px;background:#000}
+  .toast{position:fixed;right:18px;bottom:18px;max-width:460px;padding:12px 16px;
+         border-radius:8px;background:var(--panel2);border:1px solid var(--line);
+         box-shadow:0 8px 30px #0008;z-index:50;white-space:pre-wrap}
+  .toast.bad{border-color:var(--bad)} .toast.ok{border-color:var(--ok)}
+  .bar{height:5px;background:#23273a;border-radius:3px;overflow:hidden;margin-top:6px}
+  .bar>i{display:block;height:100%;background:var(--accent)}
+  .empty{color:var(--dim);padding:26px;text-align:center;border:1px dashed var(--line);border-radius:10px}
+  details summary{cursor:pointer;color:var(--dim);margin:6px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎬 CinemaDNA 工厂控制台</h1>
+  <div class="tabs">
+    <div class="tab on" data-tab="board">工厂看板</div>
+    <div class="tab" data-tab="bench">故事工作台</div>
+    <div class="tab" data-tab="proreview">审核中心</div>
+    <div class="tab" data-tab="review">人工终确认<span id="revBadge"></span></div>
+    <div class="tab" data-tab="assets">资产浏览器</div>
+    <div class="tab" data-tab="wo">工单</div>
+    <div class="tab" data-tab="cut">成片预览</div>
+    <div class="tab" data-tab="cost">成本额度</div>
+    <div class="tab" data-tab="optim">自我优化</div>
+  </div>
+  <div id="caps" title="已接入的能力（只显示是否配置，不含密钥）"></div>
+  <div id="ws"></div>
+</header>
+
+<main>
+  <!-- ============ 看板 ============ -->
+  <section id="board" class="on">
+    <div class="grid" style="grid-template-columns:1fr 340px;align-items:start">
+      <div>
+        <div class="row" style="margin-bottom:10px">
+          <b>多故事并行看板</b>
+          <span id="slots" class="pill"></span>
+          <span id="brainStats" class="muted"></span>
+          <button class="ghost" style="margin-left:auto" onclick="checkConn()">🔌 验证 API Key</button>
+          <label style="display:flex;align-items:center;gap:6px;color:var(--dim)">
+            <input type="checkbox" id="auto" checked style="width:auto"> 自动刷新
+          </label>
+          <button class="ghost" onclick="loadBoard()">刷新</button>
+        </div>
+        <div id="connPanel"></div>
+        <div id="stories" class="grid cards"></div>
+      </div>
+      <div class="card">
+        <h3>➕ 新建故事</h3>
+        <label>标题</label><input id="nTitle" placeholder="深夜出租屋">
+        <label>题材 / 方向（一句话）</label>
+        <input id="nTheme" placeholder="县城女护士被高利贷追债，最后逆袭翻身">
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:8px">
+          <div><label>集数</label><input id="nEp" type="number" value="1" min="1" max="20"></div>
+          <div><label>每集场数</label><input id="nSc" type="number" value="3" min="3" max="8"></div>
+        </div>
+        <label>优先级</label>
+        <select id="nPri"><option value="normal">normal</option>
+          <option value="high">high</option><option value="critical">critical</option></select>
+        <label>渲染后端</label>
+        <select id="nBackend"></select>
+        <div class="muted" id="backendNote" style="font-size:11.5px;margin-top:6px"></div>
+        <label>模拟场景（仅用于验证审核 / 阻塞 / 红线）</label>
+        <select id="nSim"></select>
+        <div class="muted" id="simNote" style="font-size:11.5px;margin-top:6px"></div>
+        <button style="margin-top:12px;width:100%" onclick="createStory()">创建并开工</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 审核 ============ -->
+  <section id="review">
+    <div class="row" style="margin-bottom:10px">
+      <b>人工审核闸门</b>
+      <span class="muted">通过 / 拒绝都会写进状态机与事件流，不只是页面显示</span>
+      <button class="ghost" style="margin-left:auto" onclick="loadReviews()">刷新</button>
+    </div>
+    <div id="reviews" class="grid cards"></div>
+  </section>
+
+  <!-- ============ 资产 ============ -->
+  <section id="assets">
+    <div class="row" style="margin-bottom:10px">
+      <b>统一资产大脑</b>
+      <select id="assetKind" style="width:180px" onchange="loadAssets()">
+        <option value="scene">SceneDNA 场景</option>
+        <option value="identity">IdentityDNA 身份</option>
+        <option value="prop">PropDNA 道具</option>
+      </select>
+      <span id="assetCount" class="muted"></span>
+      <button class="ghost" style="margin-left:auto" onclick="loadAssets()">刷新</button>
+    </div>
+    <div class="card"><div id="assetTable"></div></div>
+  </section>
+
+  <!-- ============ 工单 ============ -->
+  <section id="wo">
+    <div class="row" style="margin-bottom:10px">
+      <b>Workorder</b>
+      <select id="woType" style="width:150px" onchange="loadWorkorders()">
+        <option value="">全部类型</option><option value="SCENE">SCENE</option>
+        <option value="IDENTITY">IDENTITY</option><option value="PROP">PROP</option>
+      </select>
+      <select id="woStatus" style="width:170px" onchange="loadWorkorders()">
+        <option value="">全部状态</option><option value="PENDING">PENDING</option>
+        <option value="RUNNING">RUNNING</option><option value="GATE_REVIEW">GATE_REVIEW</option>
+        <option value="APPROVED">APPROVED</option><option value="REJECTED">REJECTED</option>
+        <option value="BACKFLOWED">BACKFLOWED</option><option value="FAILED">FAILED</option>
+      </select>
+      <span id="woCount" class="muted"></span>
+      <button class="ghost" style="margin-left:auto" onclick="loadWorkorders()">刷新</button>
+    </div>
+    <div class="card"><div id="woTable"></div></div>
+    <div id="woDetail"></div>
+  </section>
+
+  <!-- ============ 成片 ============ -->
+  <section id="cut">
+    <div class="row" style="margin-bottom:10px">
+      <b>成片预览</b>
+      <select id="cutStory" style="width:280px" onchange="loadCut()"></select>
+      <button class="ghost" style="margin-left:auto" onclick="loadCut()">刷新</button>
+    </div>
+    <div id="cutBody"></div>
+  </section>
+
+  <!-- ============ 故事工作台 ============ -->
+  <section id="bench">
+    <div class="row" style="margin-bottom:10px">
+      <b>故事工作台</b>
+      <span class="muted">角色 / 场景 / 道具真实资产预览</span>
+      <select id="benchStory" style="width:280px;margin-left:8px" onchange="loadBench()"></select>
+      <button class="ghost" style="margin-left:auto" onclick="loadBench()">刷新</button>
+    </div>
+    <div id="benchBody"></div>
+  </section>
+
+  <!-- ============ 审核中心 ============ -->
+  <section id="proreview">
+    <div class="row" style="margin-bottom:10px">
+      <b>审核中心 · 全模块专业审核</b>
+      <span class="muted">每模块产出后自动审核；不过=自动打回，过=继续，3 点等人终确认</span>
+      <select id="prStory" style="width:280px;margin-left:8px" onchange="loadProReview()"></select>
+      <button class="ghost" style="margin-left:auto" onclick="loadProReview()">刷新</button>
+    </div>
+    <div id="prBody"></div>
+  </section>
+
+  <!-- ============ 成本额度 ============ -->
+  <section id="cost">
+    <div class="row" style="margin-bottom:10px">
+      <b>成本额度 · 预算闸</b>
+      <button class="ghost" style="margin-left:auto" onclick="loadCost()">刷新</button>
+    </div>
+    <div id="costBody"></div>
+  </section>
+
+  <!-- ============ 自我优化 ============ -->
+  <section id="optim">
+    <div class="row" style="margin-bottom:10px">
+      <b>OptimizerDNA · 复盘脑</b>
+      <span class="muted">从工厂遥测学习：越跑越好；优化本身也要被验收，变差自动回滚</span>
+      <button style="margin-left:auto" onclick="runOptim()">▶ 跑一轮自我优化</button>
+      <button class="ghost" onclick="loadOptim()">只看建议</button>
+    </div>
+    <div id="optimBody"></div>
+  </section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let AUTO = null, BOARD = null;
+
+function toast(msg, kind="ok"){
+  const el = document.createElement("div");
+  el.className = "toast " + kind; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(), kind === "bad" ? 8000 : 3500);
+}
+async function api(path, opts={}){
+  const r = await fetch(path, {headers:{"Content-Type":"application/json"}, ...opts});
+  const txt = await r.text();
+  let data; try { data = txt ? JSON.parse(txt) : {}; } catch { data = {raw: txt}; }
+  if(!r.ok){
+    const e = new Error(data.error || r.statusText); e.code = data.code; e.data = data;
+    throw e;
+  }
+  return data;
+}
+function stateP(s){
+  const cls = {RUNNING:"", WAITING_HUMAN:"warn", BLOCKED:"bad", CLOSED:"info"}[s.status] ?? "";
+  return `<span class="pill ${cls}">${esc(s.state)}</span>`;
+}
+
+/* ---------------- 看板 ---------------- */
+async function loadBoard(){
+  const b = await api("/api/factory"); BOARD = b;
+  $("#ws").innerHTML = `工作区 ${esc(b.stories_total)} 部剧 ·
+    资产 场景${b.asset_brain.scene_atoms}/身份${b.asset_brain.characters}/道具${b.asset_brain.props}`;
+  $("#slots").textContent = `ScriptBrain 槽位 ${b.script_slots.available}/${b.script_slots.max}`;
+  $("#brainStats").textContent = `工单 ${b.asset_brain.workorders} · 回流 ${b.asset_brain.backflow_records}`;
+  const holds = b.pending_holds.length;
+  $("#revBadge").innerHTML = holds ? ` <span class="pill warn">${holds}</span>` : "";
+
+  if(!b.stories.length){ $("#stories").innerHTML =
+    `<div class="empty">还没有故事。右侧填一句题材，点「创建并开工」。</div>`; return; }
+
+  $("#stories").innerHTML = b.stories.map(s => {
+    const n = s.next || {};
+    const cut = s.cut || {};
+    const prog = ["CREATED","SCRIPT_RUNNING","SCRIPT_DONE","ASSET_MATCHING","ASSET_READY",
+      "DIRECTING","PERFORMANCE","RENDERING","QA","POST","PUBLISHED","ARCHIVED"].indexOf(s.stage);
+    return `<div class="card">
+      <h3>${esc(s.title || s.story_id)} ${stateP(s)}
+        ${s.occupies_script_slot ? '<span class="pill info">占用剧本槽位</span>' : ""}
+        ${s.simulate && s.simulate !== "none" ? '<span class="pill warn">模拟</span>' : ""}</h3>
+      <div class="bar"><i style="width:${Math.max(0,(prog+1)/12*100)}%"></i></div>
+      <div class="kv" style="margin-top:9px">
+        <span>story_id</span><b class="mono">${esc(s.story_id)}</b>
+        <span>bundle</span><b class="mono">${esc(s.bundle_id)}</b>
+        <span>阶段</span><b>${esc(s.stage)} / ${esc(s.status)}</b>
+        <span>镜头</span><b>${s.shots || 0} ${cut.total_duration_sec ? `· ${cut.total_duration_sec}s` : ""}</b>
+        <span>后端</span><b>${esc(s.backend || "-")}</b>
+      </div>
+      ${s.blocked_reason ? `<div class="pill bad" style="margin-top:8px;white-space:normal;display:block">${esc(s.blocked_reason)}</div>` : ""}
+      ${s.hold ? `<div class="pill warn" style="margin-top:8px;white-space:normal;display:block">等待人工：${esc(s.hold.reason)}</div>` : ""}
+      <div class="row" style="margin-top:11px">
+        <button ${n.blocked || !n.action ? "disabled" : ""}
+          onclick="step('${s.story_id}')">▶ 执行下一步</button>
+        <span class="muted">${esc(n.label || "")}</span>
+      </div>
+      <div class="row" style="margin-top:7px">
+        <button class="ghost" onclick="showStory('${s.story_id}')">详情</button>
+        ${cut.shot_count ? `<button class="ghost" onclick="gotoCut('${s.story_id}')">看成片</button>` : ""}
+        ${s.hold ? `<button class="ghost" onclick="show('review')">去审核</button>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function renderCaps(cfg){
+  if(!cfg) return;
+  const c = cfg.capabilities || {};
+  const pills = Object.entries(c).map(([g,v])=>{
+    const cls = v.enabled ? "ok" : "";
+    return `<span class="pill ${cls}" title="${esc(Object.entries(v.keys).map(([k,on])=>k+'='+on).join(', '))}">${g} ${v.enabled?"●":"○"}</span>`;
+  }).join(" ");
+  $("#caps").innerHTML = pills;
+}
+async function checkConn(){
+  toast("正在对已配置的 Key 发最小只读请求…");
+  try{
+    const s = await api("/api/connectivity", {method:"POST"});
+    const icon = {OK:"✅",AUTH_FAILED:"🔑",UNKNOWN_PROVIDER:"❓",HTTP_ERROR:"⚠️",NETWORK_ERROR:"🌐",SKIPPED:"⏭️"};
+    $("#connPanel").innerHTML = `<div class="card" style="margin-bottom:12px">
+      <h3>🔌 API Key 连通性　<span class="muted" style="font-size:12px">只读端点·不计费·不含密钥值</span></h3>
+      <table><thead><tr><th>厂商</th><th>能力</th><th>状态</th><th>HTTP</th><th>延迟</th><th>指纹 / 响应</th></tr></thead>
+      <tbody>${s.results.map(r=>`<tr>
+        <td>${icon[r.status]||"•"} ${esc(r.provider)}</td>
+        <td>${esc(r.capability)}</td>
+        <td><span class="pill ${r.ok?"ok":r.status==="SKIPPED"?"":"bad"}">${esc(r.status)}</span></td>
+        <td class="mono">${r.http_status??"-"}</td>
+        <td class="mono">${r.latency_ms!=null?r.latency_ms+"ms":"-"}</td>
+        <td class="mono" style="font-size:11px">${r.configured
+          ? esc(r.key_fingerprint) + (r.ok?` · ${r.response_shape.count??"?"} 模型`:(r.error?` · ${esc(r.error)}`:""))
+          : "未配置"}${r.hint?`<br><span class="muted">${esc(r.hint)}</span>`:""}</td>
+      </tr>`).join("")}</tbody></table></div>`;
+    toast(`连通性：可达 ${s.reachable.length} 家${s.configured_but_failed.length?"，失败 "+s.configured_but_failed.join("/"):""}`,
+      s.configured_but_failed.length?"bad":"ok");
+  }catch(e){ toast("连通性验证失败：" + e.message, "bad"); }
+}
+
+async function createStory(){
+  const body = {
+    title: $("#nTitle").value.trim() || "未命名",
+    theme: $("#nTheme").value.trim(),
+    priority: $("#nPri").value,
+    episode_count: +$("#nEp").value,
+    scenes_per_episode: +$("#nSc").value,
+    backend: $("#nBackend").value || null,
+    simulate: $("#nSim").value || null,
+  };
+  if(!body.theme){ toast("请先填题材", "bad"); return; }
+  try{
+    const s = await api("/api/stories", {method:"POST", body: JSON.stringify(body)});
+    toast(`已创建 ${s.story_id}`); $("#nTheme").value = ""; $("#nTitle").value = "";
+    await loadBoard();
+  }catch(e){ toast("创建失败：" + e.message, "bad"); }
+}
+
+async function step(id, action){
+  try{
+    const r = await api(`/api/stories/${id}/step`,
+      {method:"POST", body: JSON.stringify({action: action || null})});
+    const st = r.story;
+    toast(`${id} 执行了「${r.ran}」→ ${st.state}`);
+    await loadBoard();
+    if(st.status === "WAITING_HUMAN"){ toast("需要人工审核，已跳到审核页", "bad"); show("review"); }
+    if(st.status === "BLOCKED"){ toast("已阻塞：" + (st.blocked_reason||""), "bad"); }
+  }catch(e){
+    toast(e.code === "HARD_BLOCK" ? "红线拦截：" + e.message : "执行失败：" + e.message, "bad");
+    await loadBoard();
+  }
+}
+
+async function showStory(id){
+  const s = await api(`/api/stories/${id}`);
+  const arts = await api(`/api/stories/${id}/artifacts`);
+  const w = window.open("", "_blank", "width=920,height=760");
+  w.document.write(`<title>${esc(s.title)}</title>
+    <body style="background:#0e0f14;color:#e8e9f0;font-family:Consolas,monospace;padding:16px">
+    <h3>${esc(s.title)} · ${esc(s.story_id)}</h3>
+    <p>产物 ${arts.count} 个，根目录：${esc(arts.bundle_root)}</p>
+    <pre style="white-space:pre-wrap">${esc(JSON.stringify(s, null, 2))}</pre></body>`);
+}
+
+/* ---------------- 审核 ---------------- */
+async function loadReviews(){
+  const rows = await api("/api/reviews");
+  if(!rows.length){ $("#reviews").innerHTML =
+    `<div class="empty">当前没有待人工处理的闸门。</div>`; return; }
+  $("#reviews").innerHTML = rows.map((r,i) => {
+    const gates = (r.gates || []).filter(Boolean);
+    const hard = gates.some(g => (g.hard_blocks || []).length);
+    return `<div class="card">
+      <h3>${esc(r.title || r.story_id)}
+        <span class="pill ${r.kind === "BLOCKED" ? "bad" : "warn"}">${esc(r.kind)}</span></h3>
+      <div class="kv">
+        <span>story</span><b class="mono">${esc(r.story_id)}</b>
+        <span>阶段</span><b>${esc(r.stage || "-")}</b>
+        <span>原因</span><b style="white-space:pre-wrap">${esc(r.reason || "-")}</b>
+      </div>
+      ${gates.map(g => `<details><summary>Gate ${esc(g.gate_id)} · ${esc(g.workorder_type||"")}
+          ${(g.hard_blocks||[]).length ? '<span class="pill bad">硬性拦截</span>' : ""}</summary>
+        <pre>${esc(JSON.stringify({scores:g.scores, issues:g.issues, hard_blocks:g.hard_blocks}, null, 2))}</pre>
+        </details>`).join("")}
+      ${r.repair_plan ? `<details><summary>修复计划 · 打回 ${esc(r.repair_plan.target_stage||"-")}</summary>
+        <pre>${esc(JSON.stringify(r.repair_plan, null, 2))}</pre></details>` : ""}
+      ${hard ? `<div class="pill bad" style="margin-top:8px;display:block;white-space:normal">
+        IdentityDNA 肖像权红线：人工不得放行，只能重生成。</div>` : ""}
+      ${r.kind === "HOLD" ? `
+        <label>审核人</label><input id="rby${i}" value="human_lin">
+        <label>意见（会写进事件流）</label><textarea id="rnote${i}" placeholder="选填"></textarea>
+        <div class="row" style="margin-top:10px">
+          <button class="good" ${hard ? "disabled" : ""}
+            onclick="decide('${r.story_id}',true,${i})">✓ 通过</button>
+          <button class="danger" onclick="decide('${r.story_id}',false,${i})">✕ 拒绝</button>
+        </div>` : `
+        <div class="row" style="margin-top:10px">
+          <button class="ghost" onclick="step('${r.story_id}','repair')">按修复计划打回</button>
+        </div>`}
+    </div>`;
+  }).join("");
+}
+async function decide(storyId, approved, i){
+  try{
+    const r = await api(`/api/stories/${storyId}/review`, {method:"POST", body: JSON.stringify({
+      approved, decided_by: $("#rby"+i).value || "human", note: $("#rnote"+i).value || ""})});
+    toast(`${storyId} 已${approved ? "通过" : "拒绝"} → ${r.story.state}`);
+    await loadReviews(); await loadBoard();
+  }catch(e){
+    toast(e.code === "HARD_BLOCK" ? "红线不可推翻：" + e.message : "裁决失败：" + e.message, "bad");
+  }
+}
+
+/* ---------------- 资产 ---------------- */
+async function loadAssets(){
+  const kind = $("#assetKind").value;
+  const d = await api(`/api/assets/${kind}`);
+  $("#assetCount").textContent = `共 ${d.count} 个可复用资产`;
+  if(!d.count){ $("#assetTable").innerHTML = `<div class="empty">该库还没有回流资产。</div>`; return; }
+  const cols = {
+    scene: [["id","资产 ID"],["tags","标签"],["quality_score","质量"],["gate_passed","过闸"],["story_id","来源剧"],["asset_hash","hash"]],
+    identity: [["id","角色"],["master_pack_id","Master Pack"],["age_line","年龄线"],["gate_passed","过闸"],["story_id","来源剧"],["asset_hash","hash"]],
+    prop: [["id","道具"],["states","状态版本"],["continuity_supported","连续性"],["quality_score","质量"],["story_id","来源剧"],["asset_hash","hash"]],
+  }[kind];
+  $("#assetTable").innerHTML = `<table><thead><tr>${cols.map(c=>`<th>${c[1]}</th>`).join("")}</tr></thead>
+    <tbody>${d.items.map(it=>`<tr>${cols.map(([k])=>{
+      let v = it[k], html = null;
+      if(Array.isArray(v)) v = v.join("、");
+      if(v === true) html = '<span class="pill ok">是</span>';
+      else if(v === false) html = '<span class="pill bad">否</span>';
+      else if(k === "asset_hash" && v) html = `<span class="mono">${esc(String(v).slice(0,22))}…</span>`;
+      return `<td>${html ?? esc(v ?? "-")}</td>`;
+    }).join("")}</tr>`).join("")}</tbody></table>`;
+}
+
+/* ---------------- 工单 ---------------- */
+async function loadWorkorders(){
+  const q = new URLSearchParams();
+  if($("#woType").value) q.set("type", $("#woType").value);
+  if($("#woStatus").value) q.set("status", $("#woStatus").value);
+  const d = await api("/api/workorders?" + q);
+  $("#woCount").textContent = `共 ${d.count} 张`;
+  if(!d.count){ $("#woTable").innerHTML = `<div class="empty">还没有工单。</div>`; return; }
+  $("#woTable").innerHTML = `<table><thead><tr>
+    <th>工单</th><th>类型</th><th>状态</th><th>故事</th><th>Gate</th><th>结果资产</th><th></th>
+    </tr></thead><tbody>${d.items.map(w=>`<tr>
+      <td class="mono">${esc(w.workorder_id)}</td>
+      <td>${esc(w.workorder_type)}</td>
+      <td><span class="pill ${w.status==="BACKFLOWED"?"ok":w.status==="REJECTED"||w.status==="FAILED"?"bad":"warn"}">${esc(w.status)}</span></td>
+      <td class="mono">${esc(w.story_id)}</td>
+      <td>${w.gate_id ? `${esc(w.gate_id)} ${w.gate_passed?'<span class="pill ok">通过</span>':'<span class="pill bad">未过</span>'}
+           ${(w.hard_blocks||[]).length?'<span class="pill bad">红线</span>':""}` : "-"}</td>
+      <td class="mono">${esc((w.result_asset_ids||[]).join(", ") || "-")}</td>
+      <td><button class="ghost" onclick="woDetail('${w.workorder_id}')">详情</button>
+        ${w.awaiting_review ? `<button class="good" onclick="decideGate('${w.gate_id}',true)">通过</button>
+        <button class="danger" onclick="decideGate('${w.gate_id}',false)">拒绝</button>` : ""}</td>
+    </tr>`).join("")}</tbody></table>`;
+}
+async function woDetail(id){
+  const d = await api(`/api/workorders/${id}`);
+  $("#woDetail").innerHTML = `<div class="card" style="margin-top:14px">
+    <h3>工单 ${esc(id)}</h3><pre>${esc(JSON.stringify(d, null, 2))}</pre></div>`;
+  $("#woDetail").scrollIntoView({behavior:"smooth"});
+}
+async function decideGate(gateId, approved){
+  const note = prompt(approved ? "通过意见（选填）" : "拒绝原因") ?? "";
+  try{
+    await api(`/api/gates/${gateId}/decide`, {method:"POST",
+      body: JSON.stringify({approved, decided_by:"human_lin", note})});
+    toast(`Gate ${gateId} 已${approved?"通过":"拒绝"}`);
+    await loadWorkorders(); await loadBoard();
+  }catch(e){
+    toast(e.code === "HARD_BLOCK" ? "红线不可推翻：" + e.message : "失败：" + e.message, "bad");
+  }
+}
+
+/* ---------------- 成片 ---------------- */
+function gotoCut(id){ show("cut"); $("#cutStory").value = id; loadCut(); }
+async function loadCut(){
+  const id = $("#cutStory").value;
+  if(!id){ $("#cutBody").innerHTML = `<div class="empty">先选一部剧。</div>`; return; }
+  const c = await api(`/api/stories/${id}/cut`);
+  if(!c.available){ $("#cutBody").innerHTML =
+    `<div class="empty">这部剧还没有粗剪。到看板点「执行下一步」直到拼接完成。</div>`; return; }
+  const f = p => `/api/stories/${id}/file?path=${encodeURIComponent(p)}`;
+  const ex = c.exports;
+  $("#cutBody").innerHTML = `
+  <div class="grid" style="grid-template-columns:440px 1fr;align-items:start">
+    <div class="card">
+      <h3>${esc(c.title)}
+        <span class="pill ${c.duration_in_target?"ok":"warn"}">${c.total_duration_sec}s</span></h3>
+      ${ex.video ? `<video controls preload="metadata" src="${f(ex.video)}"
+            ${ex.subtitles ? `crossorigin` : ""}></video>`
+        : `<div class="empty">没有可播放视频<br><span class="mono">${esc(ex.video_error||"")}</span></div>`}
+      <div class="kv" style="margin-top:10px">
+        <span>镜头数</span><b>${c.shot_count}</b>
+        <span>目标区间</span><b>${c.target_range_sec[0]}–${c.target_range_sec[1]}s ${c.duration_in_target?"✅ 达标":"⚠️ 未达标"}</b>
+        <span>渲染后端</span><b>${esc(c.backend||"-")}</b>
+        <span>有真实文件</span><b>${c.media_ready?'<span class="pill ok">是</span>':'<span class="pill bad">否</span>'}</b>
+        <span>模型生成画面</span><b>${c.is_generated_footage?'<span class="pill ok">是</span>':'<span class="pill warn">否（占位）</span>'}</b>
+      </div>
+      ${!c.is_generated_footage ? `<div class="pill warn" style="margin-top:10px;display:block;white-space:normal">
+        注意：当前画面是占位色板，不是模型生成的成片素材。</div>` : ""}
+      <div class="row" style="margin-top:12px">
+        ${ex.video ? `<a href="${f(ex.video)}&download=true"><button>下载 MP4</button></a>` : ""}
+        ${ex.animatic ? `<a href="${f(ex.animatic)}" target="_blank"><button class="ghost">动态分镜</button></a>` : ""}
+        ${ex.subtitles ? `<a href="${f(ex.subtitles)}&download=true"><button class="ghost">字幕 VTT</button></a>` : ""}
+        ${ex.edl_text ? `<a href="${f(ex.edl_text)}" target="_blank"><button class="ghost">EDL</button></a>` : ""}
+      </div>
+    </div>
+    <div class="card">
+      <h3>时间线</h3>
+      <table><thead><tr><th>#</th><th>镜头</th><th>景别</th><th>入点-出点</th><th>模型</th><th>台词</th></tr></thead>
+      <tbody>${c.timeline.map(t=>{
+        const subs = c.subtitles.filter(s=>s.shot_id===t.shot_id).map(s=>s.text).join(" / ");
+        return `<tr><td>${t.index}</td><td class="mono">${esc(t.shot_id)}</td>
+          <td>${esc(t.shot_type)}</td>
+          <td class="mono">${t.in_sec.toFixed(1)}–${t.out_sec.toFixed(1)}</td>
+          <td class="mono">${esc(t.model)}</td><td>${esc(subs||"-")}</td></tr>`;
+      }).join("")}</tbody></table>
+    </div>
+  </div>`;
+}
+
+/* ---------------- 故事工作台：真实资产预览 ---------------- */
+function fileUrl(storyId, rel){ return `/api/stories/${storyId}/file?path=${encodeURIComponent(rel)}`; }
+function thumb(storyId, rel, real){
+  if(rel && real) return `<img src="${fileUrl(storyId, rel)}" loading="lazy"
+    style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;background:#000">`;
+  return `<div class="empty" style="aspect-ratio:3/4;display:flex;align-items:center;
+    justify-content:center;padding:0">${real?"（无图）":"mock（未出真实图）"}</div>`;
+}
+async function loadBench(){
+  fillStorySelect("#benchStory");
+  const id = $("#benchStory").value;
+  if(!id){ $("#benchBody").innerHTML = `<div class="empty">选择一个故事查看其真实资产。</div>`; return; }
+  const d = await api(`/api/stories/${id}/workbench`);
+  const section = (title, items, body) => `<div class="card" style="margin-bottom:14px">
+    <h3>${title} <span class="muted">共 ${items.length}</span></h3>
+    ${items.length ? `<div class="grid cards">${body}</div>` : `<div class="empty">暂无</div>`}</div>`;
+  const chars = d.characters.map(c=>`<div class="card" style="background:var(--panel2)">
+    ${thumb(id, c.image, c.is_real)}
+    <div style="margin-top:8px"><b>${esc(c.name||c.id)}</b>
+      <span class="pill ${c.is_real?"ok":"warn"}">${c.is_real?"真实人脸":"mock"}</span></div>
+    <div class="muted mono" style="font-size:11px">${esc(c.id)} · ${esc(c.gender||"?")}</div></div>`).join("");
+  const scenes = d.scenes.map(s=>`<div class="card" style="background:var(--panel2)">
+    ${thumb(id, s.image, s.is_real)}
+    <div style="margin-top:8px"><b class="mono" style="font-size:12px">${esc(s.id)}</b>
+      <span class="pill ${s.is_real?"ok":"warn"}">${s.is_real?"真实场景":"mock"}</span></div>
+    <div class="muted" style="font-size:11px">${esc((s.tags||[]).join("、"))}</div></div>`).join("");
+  const props = d.props.map(p=>{
+    const states = Object.entries(p.images_by_state||{});
+    const imgs = states.length && p.is_real
+      ? `<div class="row" style="gap:4px">${states.map(([st,rel])=>
+          `<div style="flex:1;min-width:80px"><img src="${fileUrl(id,rel)}" loading="lazy"
+            style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:6px">
+            <div class="muted" style="font-size:10px;text-align:center">${esc(st)}</div></div>`).join("")}</div>`
+      : thumb(id, null, p.is_real);
+    return `<div class="card" style="background:var(--panel2)">${imgs}
+      <div style="margin-top:8px"><b>${esc(p.name||p.id)}</b>
+        <span class="pill ${p.is_real?"ok":"warn"}">${p.is_real?"真实道具":"mock"}</span></div>
+      <div class="muted" style="font-size:11px">${esc(p.screen_kind?("屏幕·"+p.screen_kind):(p.render_method||""))}</div></div>`;
+  }).join("");
+  $("#benchBody").innerHTML =
+    section("👤 角色人脸", d.characters, chars) +
+    section("🏙 场景", d.scenes, scenes) +
+    section("📱 道具", d.props, props);
+}
+
+/* ---------------- 审核中心：全模块专业审核 ---------------- */
+const V_PILL = {PASS:"ok", CONFIRM:"info", REPAIR:"bad", PENDING:"warn"};
+const V_LABEL = {PASS:"通过", CONFIRM:"待终确认", REPAIR:"自动打回中", PENDING:"未走到"};
+async function loadProReview(){
+  fillStorySelect("#prStory");
+  const id = $("#prStory").value;
+  if(!id){ $("#prBody").innerHTML = `<div class="empty">选择一个故事查看全模块审核状态。</div>`; return; }
+  const d = await api(`/api/stories/${id}/reviews`);
+  const chips = Object.entries(d.summary||{}).map(([v,n])=>
+    `<span class="pill ${V_PILL[v]||""}">${V_LABEL[v]||v} ${n}</span>`).join(" ");
+  const cards = d.reviews.map(r=>`<div class="card">
+    <h3>${esc(r.label)}
+      <span class="pill ${V_PILL[r.verdict]||""}" style="margin-left:auto">${V_LABEL[r.verdict]||r.verdict}</span></h3>
+    <div class="muted" style="font-size:11.5px">
+      ${r.human_gate ? "终确认点："+esc(r.human_gate) : (r.repair_code ? "修复动作："+esc(r.repair_code) : "专业智能体自动把关")}</div>
+    ${r.issues && r.issues.length ? `<details><summary>${r.issue_count} 个问题</summary>
+      <pre>${esc(r.issues.map(i=>`[${i.severity||""}] ${i.message}`).join("\n"))}</pre></details>` : ""}
+  </div>`).join("");
+  $("#prBody").innerHTML = `<div class="row" style="margin-bottom:12px">状态 ${esc(d.state)} ${chips}</div>
+    <div class="grid cards">${cards}</div>`;
+}
+
+/* ---------------- 成本额度 ---------------- */
+async function loadCost(){
+  const d = await api("/api/cost");
+  if(!d.configured){
+    $("#costBody").innerHTML = `<div class="card"><h3>💰 成本额度</h3>
+      <div class="muted" style="white-space:pre-wrap">${esc(d.note)}</div></div>`;
+    return;
+  }
+  $("#costBody").innerHTML = `<div class="grid cards">${d.budgets.map(b=>{
+    const pct = b.max_units ? Math.min(100, 100*b.spent_units/b.max_units) : 0;
+    return `<div class="card"><h3>${esc(b.name)}
+      <span class="pill ${b.armed?"ok":"warn"}" style="margin-left:auto">${b.armed?"已武装":"未武装"}</span></h3>
+      <div class="kv"><span>已花</span><b>${b.spent_units} units</b>
+        <span>上限</span><b>${b.max_units} units</b>
+        <span>剩余</span><b>${b.remaining_units} units</b>
+        <span>提交次数</span><b>${b.submission_count}</b></div>
+      <div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  }).join("")}</div>`;
+}
+
+/* ---------------- 自我优化 ---------------- */
+const ACT_LABEL = {analyzed:"仅分析",applied:"已应用调参",kept:"验收通过·保留",rolled_back:"验收变差·已回滚",none:"无变化"};
+const ACT_PILL = {analyzed:"info",applied:"ok",kept:"ok",rolled_back:"bad",none:""};
+function renderOptim(d){
+  const t = d.telemetry || {};
+  const reps = (Object.entries(t.repairs||{}).map(([c,r])=>{
+    const rec = r.attempts ? Math.round(100*r.recovered/r.attempts) : 0;
+    return `<tr><td class="mono">${esc(c)}</td><td>${r.attempts}</td>
+      <td>${r.recovered}</td><td>${r.failed}</td>
+      <td><div class="bar" style="width:80px"><i style="width:${rec}%"></i></div>${rec}%</td></tr>`;
+  }).join("")) || `<tr><td colspan="5" class="muted">暂无修复记录</td></tr>`;
+  const caps = Object.entries(d.tuning?.repair_cap_override||{});
+  const recs = (d.recommendations||[]).map(r=>`<div class="card" style="background:var(--panel2)">
+    <div class="row"><b>${esc(r.target)}</b>
+      <span class="pill ${r.kind==='repair_cap'?'ok':(r.kind==='human_pref'?'warn':'info')}">${esc(r.kind)}</span>
+      ${r.auto?'<span class="pill ok">可自动</span>':'<span class="pill">仅建议</span>'}
+      <span class="muted" style="margin-left:auto">置信 ${Math.round(r.confidence*100)}%</span></div>
+    <div style="margin-top:6px">${esc(r.action)}</div>
+    <div class="muted mono" style="font-size:11px;margin-top:4px">${esc(JSON.stringify(r.evidence))}</div>
+  </div>`).join("") || `<div class="empty">暂无优化建议——多跑几部剧积累遥测后再来。</div>`;
+  const hs = d.hotspots || {};
+  const cmp = (k, label) => {
+    const b = d.before?.[k], a = d.after?.[k];
+    if(b===undefined && a===undefined) return "";
+    const arrow = (a!==undefined && b!==undefined) ? (a<b?"↓改善":(a>b?"↑变差":"持平")) : "";
+    const cls = a<b?"ok":(a>b?"bad":"");
+    return `<tr><td>${label}</td><td class="mono">${b??"-"}</td><td class="mono">${a??"-"}</td>
+      <td><span class="pill ${cls}">${arrow||"—"}</span></td></tr>`;
+  };
+  const modRows = (hs.top_modules||[]).map(m=>`<tr><td><b>${esc(m.module)}</b></td>
+    <td>${m.attempts}</td><td>${m.failed}</td><td>${Math.round(m.fail_rate*100)}%</td>
+    <td class="mono" style="font-size:11px">${esc((m.codes||[]).join(","))}</td></tr>`).join("")
+    || `<tr><td colspan="5" class="muted">暂无</td></tr>`;
+  const gateRows = (hs.top_gates||[]).map(g=>`<tr><td><b>${esc(g.gate)}</b></td>
+    <td>${g.decided}</td><td>${g.rejected}</td>
+    <td><span class="pill ${g.reject_rate>=0.4?'bad':''}">${Math.round(g.reject_rate*100)}%</span></td></tr>`).join("")
+    || `<tr><td colspan="4" class="muted">暂无人工裁决</td></tr>`;
+  $("#optimBody").innerHTML = `
+    <div class="row" style="margin-bottom:10px">
+      <span class="pill ${ACT_PILL[d.action]||''}">本轮：${ACT_LABEL[d.action]||d.action}</span>
+      <span class="pill">调参档 v${d.profile_version||0}</span>
+      <span class="muted">指标（越低越好）：单剧平均修复 ${d.metrics?.avg_repair_attempts ?? "-"} · 失败率 ${d.metrics?.fail_rate ?? "-"} · 人工驳回率 ${d.metrics?.human_reject_rate ?? "-"}</span>
+    </div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;align-items:start;gap:14px;margin-bottom:14px">
+      <div class="card"><h3>🔥 修复热点（按模块）</h3>
+        <table><thead><tr><th>模块</th><th>回合</th><th>失败</th><th>失败率</th><th>修复码</th></tr></thead>
+          <tbody>${modRows}</tbody></table>
+        ${hs.worst_module?`<div class="muted" style="margin-top:6px">最忙模块：<b>${esc(hs.worst_module)}</b></div>`:""}</div>
+      <div class="card"><h3>🧑‍⚖️ 人工驳回（按闸门）</h3>
+        <table><thead><tr><th>闸门</th><th>裁决</th><th>驳回</th><th>驳回率</th></tr></thead>
+          <tbody>${gateRows}</tbody></table>
+        ${hs.worst_gate?`<div class="muted" style="margin-top:6px">最高驳回：<b>${esc(hs.worst_gate)}</b>（已反校准前置多修一次）</div>`:""}</div>
+    </div>
+    <div class="card" style="margin-bottom:14px"><h3>📈 前后对比（自我验收）</h3>
+      <table><thead><tr><th>指标</th><th>上版基线</th><th>本轮</th><th>结论</th></tr></thead>
+        <tbody>${cmp("avg_repair_attempts","单剧平均修复")}${cmp("fail_rate","失败率")}${cmp("human_reject_rate","人工驳回率")}
+        ${(!d.before||!Object.keys(d.before).length)?'<tr><td colspan="4" class="muted">尚无上版基线（首轮应用后下轮才有对比）</td></tr>':''}</tbody></table></div>
+    <div class="grid" style="grid-template-columns:1fr 1fr;align-items:start;gap:14px">
+      <div class="card"><h3>🔧 已学到的调参（重试上限覆盖）</h3>
+        ${caps.length?`<div class="kv">${caps.map(([c,v])=>`<span class="mono">${esc(c)}</span><b>上限→${v}</b>`).join("")}</div>`:'<div class="muted">还没有自动调参（默认出厂值）。</div>'}
+        ${d.tuning?.watch?.length?`<div style="margin-top:8px">观察名单：${d.tuning.watch.map(w=>`<span class="pill warn">${esc(w)}</span>`).join(" ")}</div>`:""}
+      </div>
+      <div class="card"><h3>📊 修复恢复率（遥测）</h3>
+        <table><thead><tr><th>修复码</th><th>回合</th><th>救回</th><th>失败</th><th>恢复率</th></tr></thead>
+          <tbody>${reps}</tbody></table></div>
+    </div>
+    <h3 style="margin:14px 0 8px">💡 优化建议</h3>
+    <div class="grid cards">${recs}</div>`;
+}
+async function loadOptim(){ renderOptim(await api("/api/optimizer")); }
+async function runOptim(){
+  try{ const d = await api("/api/optimizer/run", {method:"POST", body:"{}"});
+    toast(`自我优化：${ACT_LABEL[d.action]||d.action}（调参档 v${d.profile_version||0}）`);
+    renderOptim(d);
+  }catch(e){ toast("优化失败："+e.message, "bad"); }
+}
+
+function fillStorySelect(sel){
+  const el = $(sel); const cur = el.value;
+  el.innerHTML = `<option value="">选择故事…</option>` +
+    (BOARD?.stories||[]).map(s=>`<option value="${s.story_id}">${esc(s.title||s.story_id)} · ${esc(s.stage)}</option>`).join("");
+  if(cur) el.value = cur;
+}
+
+/* ---------------- 导航 ---------------- */
+function show(tab){
+  document.querySelectorAll("section").forEach(s=>s.classList.toggle("on", s.id===tab));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("on", t.dataset.tab===tab));
+  if(tab==="review") loadReviews();
+  if(tab==="assets") loadAssets();
+  if(tab==="wo") loadWorkorders();
+  if(tab==="bench") loadBench();
+  if(tab==="proreview") loadProReview();
+  if(tab==="cost") loadCost();
+  if(tab==="optim") loadOptim();
+  if(tab==="cut"){
+    const cur = $("#cutStory").value;
+    $("#cutStory").innerHTML = `<option value="">选择故事…</option>` +
+      (BOARD?.stories||[]).map(s=>`<option value="${s.story_id}">${esc(s.title||s.story_id)} · ${esc(s.stage)}</option>`).join("");
+    if(cur) $("#cutStory").value = cur;
+    loadCut();
+  }
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>show(t.dataset.tab));
+
+async function boot(){
+  const h = await api("/api/health");
+  const b = h.backends;
+  $("#nBackend").innerHTML = b.choices.map(c=>
+    `<option value="${c}" ${c===b.default?"selected":""}>${c}${c===b.default?"（默认）":""}</option>`).join("");
+  $("#backendNote").textContent = b.ffmpeg_available
+    ? b.note : "本机没有 ffmpeg，只能用 mock（不出视频文件）。";
+  const sims = h.simulations || [];
+  $("#nSim").innerHTML = sims.map(s=>`<option value="${s.value}">${esc(s.label)}</option>`).join("");
+  $("#nSim").onchange = () => {
+    const s = sims.find(x=>x.value===$("#nSim").value);
+    $("#simNote").textContent = s ? s.expect : "";
+  };
+  $("#nSim").onchange();
+  renderCaps(h.config);
+  await loadBoard();
+  $("#auto").onchange = e => e.target.checked ? startAuto() : stopAuto();
+  startAuto();
+}
+function startAuto(){ stopAuto(); AUTO = setInterval(()=>{
+  if(document.querySelector("#board").classList.contains("on")) loadBoard().catch(()=>{});
+}, 4000); }
+function stopAuto(){ if(AUTO) clearInterval(AUTO); AUTO = null; }
+boot().catch(e=>toast("初始化失败：" + e.message, "bad"));
+</script>
+</body>
+</html>

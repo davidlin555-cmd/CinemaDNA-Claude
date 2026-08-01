@@ -1,0 +1,205 @@
+{
+  "schema_version": "cinemadna.story.v1",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "title": "样片",
+  "priority": "normal",
+  "stage": "QA",
+  "status": "RUNNING",
+  "state": "QA",
+  "occupies_script_slot": false,
+  "script_ref": "benchmark.json",
+  "script_submitted_at": "2026-07-23T15:52:13Z",
+  "script_summary": {},
+  "hold": null,
+  "blocked_reason": null,
+  "asset_summary": {
+    "total": 3,
+    "by_outcome": {
+      "BACKFLOWED": 3
+    },
+    "pending_gate_ids": [],
+    "failed_workorder_ids": []
+  },
+  "asset_bindings": {
+    "scene_by_id": {
+      "EP001_SC001": "scene_layout_wo_scenedna_0001"
+    },
+    "character_ids": [
+      "char_linwan"
+    ],
+    "prop_ids": [
+      "prop_hospital_bill"
+    ]
+  },
+  "shot_summary": {
+    "shot_count": 8,
+    "total_duration_sec": 40.0,
+    "shot_types": [
+      "CLOSEUP",
+      "MEDIUM"
+    ],
+    "continuity_passed": true,
+    "continuity_issues": [],
+    "warnings": []
+  },
+  "performance_summary": {
+    "shots_with_performance": 8,
+    "beats_total": 8,
+    "characters_with_bible": 1,
+    "warnings": []
+  },
+  "render_summary": {
+    "rendered": 8,
+    "rejected": 0,
+    "failed": 0,
+    "retries": 0,
+    "rendered_duration_sec": 40.0,
+    "consistency_passed": true,
+    "cloud_ratio": 0.75,
+    "estimated_cost_total": 10.304,
+    "is_real_media": true,
+    "is_generated_footage": false
+  },
+  "qa_summary": {
+    "verdict": "PASS",
+    "passed": true,
+    "blocking_issues": 0,
+    "info_notes": 8,
+    "target_stage": null,
+    "shots_to_redo": 0,
+    "by_agent": {
+      "vision": 0,
+      "performance": 0,
+      "continuity": 0
+    }
+  },
+  "cut_summary": {
+    "shot_count": 8,
+    "total_duration_sec": 40.0,
+    "duration_in_target": true,
+    "media_ready": true,
+    "is_generated_footage": false,
+    "exports": {
+      "edl": "10_outputs/rough_cut.edl",
+      "subtitles": "10_outputs/subtitles.vtt",
+      "animatic": "10_outputs/animatic.html",
+      "video": "10_outputs/rough_cut.mp4"
+    }
+  },
+  "error": null,
+  "created_at": "2026-07-23T15:52:13Z",
+  "updated_at": "2026-07-23T15:52:17Z",
+  "events": [
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STORY_CREATED",
+      "note": "样片"
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STAGE_ADVANCED",
+      "from": "CREATED",
+      "to": "SCRIPT_RUNNING",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STAGE_ADVANCED",
+      "from": "SCRIPT_RUNNING",
+      "to": "SCRIPT_DONE",
+      "note": "benchmark.json"
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STAGE_ADVANCED",
+      "from": "SCRIPT_DONE",
+      "to": "ASSET_MATCHING",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STAGE_ADVANCED",
+      "from": "ASSET_MATCHING",
+      "to": "ASSET_READY",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STAGE_ADVANCED",
+      "from": "ASSET_READY",
+      "to": "DIRECTING",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "SHOTS_PLANNED",
+      "shots": 8,
+      "duration": 40.0
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "STAGE_ADVANCED",
+      "from": "DIRECTING",
+      "to": "PERFORMANCE",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:13Z",
+      "event": "PERFORMANCE_ATTACHED",
+      "shots_with_performance": 8,
+      "beats_total": 8,
+      "characters_with_bible": 1,
+      "warnings": []
+    },
+    {
+      "at": "2026-07-23T15:52:17Z",
+      "event": "STAGE_ADVANCED",
+      "from": "PERFORMANCE",
+      "to": "RENDERING",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:17Z",
+      "event": "SHOTS_RENDERED",
+      "rendered": 8,
+      "rejected": 0,
+      "failed": 0,
+      "retries": 0,
+      "rendered_duration_sec": 40.0,
+      "consistency_passed": true,
+      "cloud_ratio": 0.75,
+      "estimated_cost_total": 10.304,
+      "is_real_media": true,
+      "is_generated_footage": false
+    },
+    {
+      "at": "2026-07-23T15:52:17Z",
+      "event": "SHOT_QA_DONE",
+      "verdict": "PASS",
+      "blocking": 0
+    },
+    {
+      "at": "2026-07-23T15:52:17Z",
+      "event": "STAGE_ADVANCED",
+      "from": "RENDERING",
+      "to": "QA",
+      "note": null
+    },
+    {
+      "at": "2026-07-23T15:52:17Z",
+      "event": "ROUGH_CUT_ASSEMBLED",
+      "shot_count": 8,
+      "total_duration_sec": 40.0,
+      "duration_in_target": true,
+      "media_ready": true,
+      "is_generated_footage": false,
+      "exports": {
+        "edl": "10_outputs/rough_cut.edl",
+        "subtitles": "10_outputs/subtitles.vtt",
+        "animatic": "10_outputs/animatic.html",
+        "video": "10_outputs/rough_cut.mp4"
+      }
+    }
+  ]
+}

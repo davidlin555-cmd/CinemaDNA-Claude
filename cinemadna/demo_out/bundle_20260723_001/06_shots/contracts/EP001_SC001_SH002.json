@@ -1,0 +1,97 @@
+{
+  "schema_version": "cinemadna.shot_contract.v1",
+  "shot_id": "EP001_SC001_SH002",
+  "scene_id": "EP001_SC001",
+  "episode_id": "EP001",
+  "order": 2,
+  "shot_type": "CLOSEUP",
+  "status": "PERFORMANCE_READY",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "task_id": "task_shot_0002",
+  "asset_hash": null,
+  "camera": {
+    "shot_size": "特写",
+    "movement": "微推",
+    "angle": "略仰",
+    "lens_mm": 85,
+    "intent": "中近景，压迫感｜特写微推"
+  },
+  "duration_sec": 4.8,
+  "emotion": {
+    "beat": "CONFLICT",
+    "intensity": 0.8679,
+    "mood": "压抑、疲惫"
+  },
+  "assets": {
+    "scene": {
+      "scene_id": "EP001_SC001",
+      "asset_id": "scene_layout_wo_scenedna_0001",
+      "asset_hash": "sha256:91260e3e395e7b8c6f908a908a090721ab858e1d2407f92e5277a4157074723f",
+      "gate_passed": true,
+      "asset_type": "COMPOSED_LAYOUT",
+      "tags": [
+        "县城老旧出租屋",
+        "深夜",
+        "压抑",
+        "疲惫"
+      ]
+    },
+    "characters": [
+      {
+        "character_id": "char_linwan",
+        "master_pack_id": "cmp_0001",
+        "base_face_asset_id": "face_wo_identitydna_0001_base",
+        "asset_hash": "sha256:501830661aa3b3bcc06e28ea5c838f264035cb94329fa3baa19b68baeca4eaa2",
+        "gate_passed": true,
+        "age_line": {
+          "25": "face_wo_identitydna_0001_base_age25",
+          "35": "face_wo_identitydna_0001_base_age35",
+          "50": "face_wo_identitydna_0001_base_age50"
+        }
+      }
+    ],
+    "props": []
+  },
+  "performance": {
+    "acting_beats": [
+      {
+        "beat_index": 0,
+        "type": "ACTION",
+        "character_id": "char_linwan",
+        "cue": "沉默中的动作",
+        "micro_expression": {
+          "primary": "下颌收紧，视线避开对方",
+          "secondary": "眉心微锁但目光不移",
+          "physiological": "眉心微锁，吞咽一次",
+          "scale": "微表情主导，肢体几乎不动",
+          "intensity": 0.8679
+        },
+        "body": "缓慢转身/停顿"
+      }
+    ],
+    "blocking": {
+      "schema_version": "cinemadna.acting_beats.v1",
+      "scene_id": "EP001_SC001",
+      "spatial_needs": "可支持人物走动与特写",
+      "positions": [
+        {
+          "character_id": "char_linwan",
+          "mark": "A",
+          "movement": "从画左入画后停在中景位"
+        }
+      ],
+      "camera_relation": "中近景，压迫感"
+    },
+    "performance_bible_refs": [
+      "char_linwan"
+    ]
+  },
+  "dialogue": [],
+  "difficulty": "normal",
+  "notes": "",
+  "created_at": "2026-07-23T15:52:13Z",
+  "signed_at": "2026-07-23T15:52:13Z",
+  "contract_hash": "sha256:28cbf4d47328540b50fb5294e67b92615d4a9dabf23955b3c19c7ad1c65fbd7b",
+  "render_result": null
+}

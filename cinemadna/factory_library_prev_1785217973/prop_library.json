@@ -1,0 +1,59 @@
+{
+  "prop_hospital_bill": {
+    "schema_version": "cinemadna.prop_backflow.v1",
+    "backflow_id": "bf_prop_0001",
+    "prop_id": "prop_hospital_bill",
+    "workorder_id": "wo_propdna_0001",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001",
+    "asset_hash": "sha256:c6d94b3952b9facd7ce06bcff06b6ca07f6f501646737bd25068ddef4f9fe2b9",
+    "asset_ids_by_state": {
+      "完整": "prop_prop_hospital_bill_00",
+      "放在桌上": "prop_prop_hospital_bill_01"
+    },
+    "prop_images_by_state": {
+      "完整": "04_props/prop_hospital_bill/完整.png",
+      "放在桌上": "04_props/prop_hospital_bill/放在桌上.png"
+    },
+    "prop_images_abspath": {
+      "完整": "E:\\CinemaDNA-Claude\\cinemadna\\factory_library\\assets\\60814d2f_完整.png",
+      "放在桌上": "E:\\CinemaDNA-Claude\\cinemadna\\factory_library\\assets\\114269e2_放在桌上.png"
+    },
+    "is_real_image": true,
+    "prop_render_method": "template_screenshot",
+    "screen_kind": "payment",
+    "real_prop_errors": {},
+    "gate_passed": true,
+    "reusable": true,
+    "continuity_supported": true,
+    "quality_score": 0.867,
+    "created_at": "2026-07-28T02:30:48Z"
+  },
+  "prop_work_badge": {
+    "schema_version": "cinemadna.prop_backflow.v1",
+    "backflow_id": "bf_prop_0002",
+    "prop_id": "prop_work_badge",
+    "workorder_id": "wo_propdna_0002",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001",
+    "asset_hash": "sha256:3569376560accc8c67f66b0e306709076e8bc3f90a402190991aaf9188c5fec9",
+    "asset_ids_by_state": {
+      "被摔裂": "prop_prop_work_badge_00"
+    },
+    "prop_images_by_state": {
+      "被摔裂": "04_props/prop_work_badge/被摔裂.jpg"
+    },
+    "prop_images_abspath": {
+      "被摔裂": "E:\\CinemaDNA-Claude\\cinemadna\\factory_library\\assets\\b9a70b43_被摔裂.jpg"
+    },
+    "is_real_image": true,
+    "prop_render_method": "flux_text2image",
+    "screen_kind": null,
+    "real_prop_errors": {},
+    "gate_passed": true,
+    "reusable": true,
+    "continuity_supported": true,
+    "quality_score": 0.8574,
+    "created_at": "2026-07-28T02:30:49Z"
+  }
+}

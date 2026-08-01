@@ -1,0 +1,9 @@
+{
+  "schema_version": "cinemadna.continuity_qa.v1",
+  "agent": "continuity",
+  "shots_checked": 8,
+  "passed": true,
+  "issues": [],
+  "blocking_count": 0,
+  "checked_at": "2026-07-23T15:52:17Z"
+}

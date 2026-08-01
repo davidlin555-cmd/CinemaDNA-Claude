@@ -1,0 +1,58 @@
+{
+  "schema_version": "cinemadna.shooting_script.v1",
+  "script_id": "script_handwritten_fixture",
+  "story_id": "drama_0005",
+  "title": "深夜出租屋",
+  "episodes": [
+    {
+      "episode_id": "EP001",
+      "scenes": [
+        {
+          "scene_id": "EP001_SC001",
+          "location_description": "县城老旧出租屋",
+          "time_of_day": "深夜",
+          "mood": "压抑、疲惫",
+          "camera_intent": "中近景，压迫感",
+          "required_atoms": ["室内布局", "光线", "家具陈设", "窗户"],
+          "spatial_needs": "可支持人物走动与特写",
+          "characters": ["char_linwan"],
+          "props": ["prop_hospital_bill"]
+        },
+        {
+          "scene_id": "EP001_SC002",
+          "location_description": "医院走廊",
+          "time_of_day": "清晨",
+          "mood": "焦灼、无助",
+          "camera_intent": "长焦跟拍",
+          "required_atoms": ["走廊纵深", "冷白光线", "长椅", "指示牌"],
+          "spatial_needs": "可支持人物长距离行走",
+          "characters": ["char_linwan"],
+          "props": ["prop_hospital_bill"]
+        }
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "character_id": "char_linwan",
+      "name": "林晚",
+      "age_range": "25-28",
+      "gender": "female",
+      "ethnicity_preference": "东亚/中国",
+      "personality_keywords": ["压抑", "坚韧", "疲惫"],
+      "role_type": "主角",
+      "need_age_line": true,
+      "need_family": false
+    }
+  ],
+  "props": [
+    {
+      "prop_id": "prop_hospital_bill",
+      "name": "医院缴费单",
+      "description": "旧的纸质医院缴费单",
+      "states_needed": ["完整", "被攥皱", "放在桌上"],
+      "story_function": "建立女主经济压力",
+      "continuity_critical": true
+    }
+  ]
+}

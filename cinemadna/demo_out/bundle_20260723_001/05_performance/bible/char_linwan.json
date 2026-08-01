@@ -1,0 +1,24 @@
+{
+  "schema_version": "cinemadna.performance_bible.v1",
+  "character_id": "char_linwan",
+  "name": "林晚",
+  "traits": [
+    "压抑",
+    "坚韧",
+    "疲惫"
+  ],
+  "signature_expressions": [
+    "下颌收紧，视线避开对方"
+  ],
+  "source_shots": [
+    "drama_0001/EP001_SC001_SH001",
+    "drama_0001/EP001_SC001_SH002",
+    "drama_0001/EP001_SC001_SH003",
+    "drama_0001/EP001_SC001_SH004",
+    "drama_0001/EP001_SC001_SH005",
+    "drama_0001/EP001_SC001_SH006",
+    "drama_0001/EP001_SC001_SH007",
+    "drama_0001/EP001_SC001_SH008"
+  ],
+  "updated_at": "2026-07-23T15:52:13Z"
+}

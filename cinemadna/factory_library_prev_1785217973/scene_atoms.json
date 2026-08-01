@@ -1,0 +1,164 @@
+{
+  "scene_layout_wo_scenedna_0001": {
+    "schema_version": "cinemadna.scene_backflow.v1",
+    "backflow_id": "bf_scene_0001",
+    "asset_id": "scene_layout_wo_scenedna_0001",
+    "workorder_id": "wo_scenedna_0001",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001",
+    "asset_hash": "sha256:7dcc3e0623aed0e7caa5035ac5767c889c633a756531b053791b0dcad4fe0f16",
+    "asset_type": "COMPOSED_LAYOUT",
+    "tags": [
+      "县城老旧出租屋",
+      "深夜",
+      "压抑",
+      "疲惫"
+    ],
+    "source": "generated",
+    "quality_score": 0.8124,
+    "gate_passed": true,
+    "reusable": true,
+    "scene_image": "03_scene/EP001_SC001/scene.jpg",
+    "scene_image_abspath": "E:\\CinemaDNA-Claude\\cinemadna\\factory_library\\assets\\ab6d8e34_scene.jpg",
+    "is_real_image": true,
+    "created_at": "2026-07-28T02:30:34Z",
+    "atoms": [
+      {
+        "atom_id": "atom_wo_scenedna_0001_00",
+        "atom_type": "室内布局",
+        "source": "internal_db",
+        "license": "authorized",
+        "naturalness": 0.8892
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0001_01",
+        "atom_type": "光线",
+        "source": "authorized_public",
+        "license": "authorized",
+        "naturalness": 0.8361
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0001_02",
+        "atom_type": "家具陈设",
+        "source": "internal_db",
+        "license": "authorized",
+        "naturalness": 0.9301
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0001_03",
+        "atom_type": "窗户",
+        "source": "authorized_public",
+        "license": "authorized",
+        "naturalness": 0.8537
+      }
+    ]
+  },
+  "scene_layout_wo_scenedna_0002": {
+    "schema_version": "cinemadna.scene_backflow.v1",
+    "backflow_id": "bf_scene_0002",
+    "asset_id": "scene_layout_wo_scenedna_0002",
+    "workorder_id": "wo_scenedna_0002",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001",
+    "asset_hash": "sha256:466b5c1e542f732a39a26cd48b0d617010a54d08ba84553ff992b0d3bd6946c1",
+    "asset_type": "COMPOSED_LAYOUT",
+    "tags": [
+      "写字楼大堂",
+      "清晨",
+      "冷漠",
+      "疏离"
+    ],
+    "source": "generated",
+    "quality_score": 0.8666,
+    "gate_passed": true,
+    "reusable": true,
+    "scene_image": "03_scene/EP001_SC002/scene.jpg",
+    "scene_image_abspath": "E:\\CinemaDNA-Claude\\cinemadna\\factory_library\\assets\\efc733a8_scene.jpg",
+    "is_real_image": true,
+    "created_at": "2026-07-28T02:30:38Z",
+    "atoms": [
+      {
+        "atom_id": "atom_wo_scenedna_0002_00",
+        "atom_type": "挑高空间",
+        "source": "internal_db",
+        "license": "authorized",
+        "naturalness": 0.9292
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0002_01",
+        "atom_type": "冷白光线",
+        "source": "authorized_public",
+        "license": "authorized",
+        "naturalness": 0.8365
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0002_02",
+        "atom_type": "前台",
+        "source": "internal_db",
+        "license": "authorized",
+        "naturalness": 0.9415
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0002_03",
+        "atom_type": "玻璃幕墙",
+        "source": "authorized_public",
+        "license": "authorized",
+        "naturalness": 0.9444
+      }
+    ]
+  },
+  "scene_layout_wo_scenedna_0003": {
+    "schema_version": "cinemadna.scene_backflow.v1",
+    "backflow_id": "bf_scene_0003",
+    "asset_id": "scene_layout_wo_scenedna_0003",
+    "workorder_id": "wo_scenedna_0003",
+    "story_id": "drama_0001",
+    "bundle_id": "bundle_20260724_001",
+    "asset_hash": "sha256:ab9a514fb3de4dfe35de1123a4a3bdbbbf92395beb1838c1584c6bccb2f263be",
+    "asset_type": "COMPOSED_LAYOUT",
+    "tags": [
+      "公司会议室",
+      "白天",
+      "紧绷",
+      "对峙"
+    ],
+    "source": "generated",
+    "quality_score": 0.8309,
+    "gate_passed": true,
+    "reusable": true,
+    "scene_image": "03_scene/EP001_SC003/scene.jpg",
+    "scene_image_abspath": "E:\\CinemaDNA-Claude\\cinemadna\\factory_library\\assets\\c095480b_scene.jpg",
+    "is_real_image": true,
+    "created_at": "2026-07-28T02:30:39Z",
+    "atoms": [
+      {
+        "atom_id": "atom_wo_scenedna_0003_00",
+        "atom_type": "长桌",
+        "source": "internal_db",
+        "license": "authorized",
+        "naturalness": 0.934
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0003_01",
+        "atom_type": "百叶窗光",
+        "source": "authorized_public",
+        "license": "authorized",
+        "naturalness": 0.8942
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0003_02",
+        "atom_type": "投影幕",
+        "source": "internal_db",
+        "license": "authorized",
+        "naturalness": 0.8677
+      },
+      {
+        "atom_id": "atom_wo_scenedna_0003_03",
+        "atom_type": "座位秩序",
+        "source": "authorized_public",
+        "license": "authorized",
+        "naturalness": 0.8459
+      }
+    ]
+  }
+}

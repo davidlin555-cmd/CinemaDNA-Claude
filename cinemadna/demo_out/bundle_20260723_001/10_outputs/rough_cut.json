@@ -1,0 +1,245 @@
+{
+  "schema_version": "cinemadna.rough_cut.v1",
+  "story_id": "drama_0001",
+  "bundle_id": "bundle_20260723_001",
+  "title": "标杆样片·深夜出租屋",
+  "shot_count": 8,
+  "total_duration_sec": 40.0,
+  "target_range_sec": [
+    30.0,
+    60.0
+  ],
+  "duration_in_target": true,
+  "scenes": [
+    "EP001_SC001"
+  ],
+  "timeline": [
+    {
+      "index": 1,
+      "shot_id": "EP001_SC001_SH001",
+      "scene_id": "EP001_SC001",
+      "shot_type": "MEDIUM",
+      "in_sec": 0.0,
+      "out_sec": 5.6,
+      "duration_sec": 5.6,
+      "source": "09_downloads/task_shot_0001/EP001_SC001_SH001.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "local-video-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:7554d28329828f8925958cdcd470f17effc8522aac174f4363535dc32793f26e",
+      "camera": {
+        "shot_size": "中景",
+        "movement": "固定",
+        "angle": "平视",
+        "lens_mm": 35,
+        "intent": "中近景，压迫感｜中景固定"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。中景·固定·平视，中近景，压迫感｜中景固定。情绪强度 0.8379，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 2,
+      "shot_id": "EP001_SC001_SH002",
+      "scene_id": "EP001_SC001",
+      "shot_type": "CLOSEUP",
+      "in_sec": 5.6,
+      "out_sec": 10.4,
+      "duration_sec": 4.8,
+      "source": "09_downloads/task_shot_0002/EP001_SC001_SH002.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "cloud-face-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:3bb4e6f754faf305ffe05baee6a78e786913a009d393d85bde510780ec2c285e",
+      "camera": {
+        "shot_size": "特写",
+        "movement": "微推",
+        "angle": "略仰",
+        "lens_mm": 85,
+        "intent": "中近景，压迫感｜特写微推"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.8679，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 3,
+      "shot_id": "EP001_SC001_SH003",
+      "scene_id": "EP001_SC001",
+      "shot_type": "CLOSEUP",
+      "in_sec": 10.4,
+      "out_sec": 15.2,
+      "duration_sec": 4.8,
+      "source": "09_downloads/task_shot_0003/EP001_SC001_SH003.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "cloud-face-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:33f8ce12a56bcf067da3d189df36b3c935b90479839edca3270784ec48bfb5f2",
+      "camera": {
+        "shot_size": "特写",
+        "movement": "微推",
+        "angle": "略仰",
+        "lens_mm": 85,
+        "intent": "中近景，压迫感｜特写微推"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.9141，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 4,
+      "shot_id": "EP001_SC001_SH004",
+      "scene_id": "EP001_SC001",
+      "shot_type": "CLOSEUP",
+      "in_sec": 15.2,
+      "out_sec": 20.0,
+      "duration_sec": 4.8,
+      "source": "09_downloads/task_shot_0004/EP001_SC001_SH004.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "cloud-face-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:b103802266199de2930c84b7c0efbe8b6e6fbac13b965ecc70f100854479b5f3",
+      "camera": {
+        "shot_size": "特写",
+        "movement": "微推",
+        "angle": "略仰",
+        "lens_mm": 85,
+        "intent": "中近景，压迫感｜特写微推"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.9258，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 5,
+      "shot_id": "EP001_SC001_SH005",
+      "scene_id": "EP001_SC001",
+      "shot_type": "MEDIUM",
+      "in_sec": 20.0,
+      "out_sec": 25.6,
+      "duration_sec": 5.6,
+      "source": "09_downloads/task_shot_0005/EP001_SC001_SH005.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "local-video-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:418190ea37491f5a6ec549195ca652ff192d60a27dfc6bdb06edc71db074ca19",
+      "camera": {
+        "shot_size": "中景",
+        "movement": "固定",
+        "angle": "平视",
+        "lens_mm": 35,
+        "intent": "中近景，压迫感｜中景固定"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。中景·固定·平视，中近景，压迫感｜中景固定。情绪强度 0.9544，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 6,
+      "shot_id": "EP001_SC001_SH006",
+      "scene_id": "EP001_SC001",
+      "shot_type": "CLOSEUP",
+      "in_sec": 25.6,
+      "out_sec": 30.4,
+      "duration_sec": 4.8,
+      "source": "09_downloads/task_shot_0006/EP001_SC001_SH006.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "cloud-face-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:7f034bc945c98c5517adab54ca2fd26aa24b08d739d85b766bc483d4d5982770",
+      "camera": {
+        "shot_size": "特写",
+        "movement": "微推",
+        "angle": "略仰",
+        "lens_mm": 85,
+        "intent": "中近景，压迫感｜特写微推"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.9975，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 7,
+      "shot_id": "EP001_SC001_SH007",
+      "scene_id": "EP001_SC001",
+      "shot_type": "CLOSEUP",
+      "in_sec": 30.4,
+      "out_sec": 35.2,
+      "duration_sec": 4.8,
+      "source": "09_downloads/task_shot_0007/EP001_SC001_SH007.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "cloud-face-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:ba125e7011584d07dec82e44cb012d84f5cc527679637a0306405b50e0ffd9eb",
+      "camera": {
+        "shot_size": "特写",
+        "movement": "微推",
+        "angle": "略仰",
+        "lens_mm": 85,
+        "intent": "中近景，压迫感｜特写微推"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 1.0，下颌收紧，视线避开对方。"
+    },
+    {
+      "index": 8,
+      "shot_id": "EP001_SC001_SH008",
+      "scene_id": "EP001_SC001",
+      "shot_type": "CLOSEUP",
+      "in_sec": 35.2,
+      "out_sec": 40.0,
+      "duration_sec": 4.8,
+      "source": "09_downloads/task_shot_0008/EP001_SC001_SH008.mp4",
+      "media_type": "video/mp4",
+      "is_real_media": true,
+      "is_generated_footage": false,
+      "model": "cloud-face-v1",
+      "backend": "placeholder-media",
+      "asset_hash": "sha256:de6af6bba89d06df3629bae2e4b4191fdba6262d82614174cb6af1b5ccdceba5",
+      "camera": {
+        "shot_size": "特写",
+        "movement": "微推",
+        "angle": "略仰",
+        "lens_mm": 85,
+        "intent": "中近景，压迫感｜特写微推"
+      },
+      "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 1.0，下颌收紧，视线避开对方。"
+    }
+  ],
+  "subtitles": [
+    {
+      "shot_id": "EP001_SC001_SH001",
+      "character_id": "char_linwan",
+      "text": "我没有退路了。",
+      "in_sec": 0.0,
+      "out_sec": 5.6
+    }
+  ],
+  "edl": [
+    "001  00:00.000-00:05.600  EP001_SC001_SH001        MEDIUM       local-video-v1   09_downloads/task_shot_0001/EP001_SC001_SH001.mp4",
+    "002  00:05.600-00:10.400  EP001_SC001_SH002        CLOSEUP      cloud-face-v1    09_downloads/task_shot_0002/EP001_SC001_SH002.mp4",
+    "003  00:10.400-00:15.200  EP001_SC001_SH003        CLOSEUP      cloud-face-v1    09_downloads/task_shot_0003/EP001_SC001_SH003.mp4",
+    "004  00:15.200-00:20.000  EP001_SC001_SH004        CLOSEUP      cloud-face-v1    09_downloads/task_shot_0004/EP001_SC001_SH004.mp4",
+    "005  00:20.000-00:25.600  EP001_SC001_SH005        MEDIUM       local-video-v1   09_downloads/task_shot_0005/EP001_SC001_SH005.mp4",
+    "006  00:25.600-00:30.400  EP001_SC001_SH006        CLOSEUP      cloud-face-v1    09_downloads/task_shot_0006/EP001_SC001_SH006.mp4",
+    "007  00:30.400-00:35.200  EP001_SC001_SH007        CLOSEUP      cloud-face-v1    09_downloads/task_shot_0007/EP001_SC001_SH007.mp4",
+    "008  00:35.200-00:40.000  EP001_SC001_SH008        CLOSEUP      cloud-face-v1    09_downloads/task_shot_0008/EP001_SC001_SH008.mp4"
+  ],
+  "missing_shots": [],
+  "media_ready": true,
+  "is_generated_footage": false,
+  "exports": {
+    "edl": "10_outputs/rough_cut.edl",
+    "subtitles": "10_outputs/subtitles.vtt",
+    "animatic": "10_outputs/animatic.html",
+    "video": {
+      "ok": true,
+      "relpath": "10_outputs/rough_cut.mp4",
+      "bytes": 220357,
+      "duration_sec": 40.0
+    }
+  },
+  "assembled_at": "2026-07-23T15:52:17Z",
+  "notes": "media_ready 表示每个镜头都有真实文件；is_generated_footage 表示这些文件是模型生成的画面。占位色板下前者可为真、后者必为假。"
+}

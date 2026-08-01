@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>标杆样片·深夜出租屋 · 动态分镜</title>
+<style>
+ :root { color-scheme: dark; }
+ body { margin:0; background:#0d0d12; color:#eee;
+        font-family:"Microsoft YaHei",system-ui,sans-serif;
+        display:flex; flex-direction:column; align-items:center; gap:12px; padding:16px; }
+ #stage { width:min(360px,90vw); aspect-ratio:9/16; border-radius:10px;
+           display:flex; flex-direction:column; justify-content:space-between;
+           padding:18px; box-sizing:border-box; transition:background .25s; }
+ #meta { font-size:13px; opacity:.8; line-height:1.7; }
+ #sub { text-align:center; font-size:20px; font-weight:600; text-shadow:0 2px 6px #000; }
+ #bar { width:min(360px,90vw); height:6px; background:#222; border-radius:3px; }
+ #fill { height:100%; width:0; background:#e0a458; border-radius:3px; }
+ #hud { font-size:13px; opacity:.75; }
+ button { background:#e0a458; border:0; color:#111; padding:8px 20px;
+           border-radius:6px; font-size:15px; cursor:pointer; }
+ .warn { font-size:12px; color:#e0a458; max-width:min(360px,90vw); text-align:center; }
+</style></head><body>
+<h3 style="margin:4px">标杆样片·深夜出租屋</h3>
+<div id="stage"><div id="meta"></div><div id="sub"></div></div>
+<div id="bar"><div id="fill"></div></div>
+<div id="hud">00:00.000 / 00:00.000</div>
+<button id="play">播放</button>
+<div class="warn" id="warn"></div>
+<script>
+const D = {"title": "标杆样片·深夜出租屋", "total": 40.0, "shots": [{"i": 1, "id": "EP001_SC001_SH001", "scene": "EP001_SC001", "type": "MEDIUM", "in": 0.0, "out": 5.6, "dur": 5.6, "model": "local-video-v1", "size": "中景", "move": "固定", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。中景·固定·平视，中近景，压迫感｜中景固定。情绪强度 0.8379，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0001/EP001_SC001_SH001.mp4", "subs": ["我没有退路了。"]}, {"i": 2, "id": "EP001_SC001_SH002", "scene": "EP001_SC001", "type": "CLOSEUP", "in": 5.6, "out": 10.4, "dur": 4.8, "model": "cloud-face-v1", "size": "特写", "move": "微推", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.8679，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0002/EP001_SC001_SH002.mp4", "subs": []}, {"i": 3, "id": "EP001_SC001_SH003", "scene": "EP001_SC001", "type": "CLOSEUP", "in": 10.4, "out": 15.2, "dur": 4.8, "model": "cloud-face-v1", "size": "特写", "move": "微推", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.9141，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0003/EP001_SC001_SH003.mp4", "subs": []}, {"i": 4, "id": "EP001_SC001_SH004", "scene": "EP001_SC001", "type": "CLOSEUP", "in": 15.2, "out": 20.0, "dur": 4.8, "model": "cloud-face-v1", "size": "特写", "move": "微推", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.9258，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0004/EP001_SC001_SH004.mp4", "subs": []}, {"i": 5, "id": "EP001_SC001_SH005", "scene": "EP001_SC001", "type": "MEDIUM", "in": 20.0, "out": 25.6, "dur": 5.6, "model": "local-video-v1", "size": "中景", "move": "固定", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。中景·固定·平视，中近景，压迫感｜中景固定。情绪强度 0.9544，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0005/EP001_SC001_SH005.mp4", "subs": []}, {"i": 6, "id": "EP001_SC001_SH006", "scene": "EP001_SC001", "type": "CLOSEUP", "in": 25.6, "out": 30.4, "dur": 4.8, "model": "cloud-face-v1", "size": "特写", "move": "微推", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 0.9975，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0006/EP001_SC001_SH006.mp4", "subs": []}, {"i": 7, "id": "EP001_SC001_SH007", "scene": "EP001_SC001", "type": "CLOSEUP", "in": 30.4, "out": 35.2, "dur": 4.8, "model": "cloud-face-v1", "size": "特写", "move": "微推", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 1.0，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0007/EP001_SC001_SH007.mp4", "subs": []}, {"i": 8, "id": "EP001_SC001_SH008", "scene": "EP001_SC001", "type": "CLOSEUP", "in": 35.2, "out": 40.0, "dur": 4.8, "model": "cloud-face-v1", "size": "特写", "move": "微推", "prompt": "县城老旧出租屋，深夜，压抑，疲惫。特写·微推·略仰，中近景，压迫感｜特写微推。情绪强度 1.0，下颌收紧，视线避开对方。", "real": true, "gen": false, "src": "09_downloads/task_shot_0008/EP001_SC001_SH008.mp4", "subs": []}], "generated": false};
+const COLORS = {ESTABLISHING:"#1b263b",MEDIUM:"#2b2d42",CLOSEUP:"#3d2c3f",
+                 REACTION:"#2f3e46",INSERT:"#40342b"};
+const stage=document.getElementById("stage"), meta=document.getElementById("meta"),
+      sub=document.getElementById("sub"), fill=document.getElementById("fill"),
+      hud=document.getElementById("hud"), btn=document.getElementById("play");
+document.getElementById("warn").textContent = D.generated
+  ? "" : "注意：这不是模型生成的画面，只是按真实时长播放的分镜占位。";
+const fmt=s=>{const m=Math.floor(s/60),x=(s%60).toFixed(3).padStart(6,"0");
+  return `${String(m).padStart(2,"0")}:${x}`;};
+let t0=null, raf=null;
+function draw(t){
+  const shot = D.shots.find(s=>t>=s.in && t<s.out) || D.shots[D.shots.length-1];
+  stage.style.background = COLORS[shot.type] || "#22223b";
+  meta.innerHTML = `<b>${shot.i}/${D.shots.length} ${shot.id}</b><br>`
+    + `${shot.type} · ${shot.size} · ${shot.move}<br>`
+    + `${shot.dur}s · ${shot.model}<br><span style="opacity:.6">${shot.prompt}</span>`;
+  sub.textContent = shot.subs.join(" / ");
+  fill.style.width = (100*t/D.total).toFixed(2)+"%";
+  hud.textContent = fmt(t)+" / "+fmt(D.total);
+}
+function tick(ts){
+  if(t0===null) t0=ts;
+  const t=(ts-t0)/1000;
+  if(t>=D.total){ draw(D.total-0.001); btn.textContent="重播"; t0=null; raf=null; return; }
+  draw(t); raf=requestAnimationFrame(tick);
+}
+btn.onclick=()=>{ if(raf) return; btn.textContent="播放中…"; t0=null;
+  raf=requestAnimationFrame(tick); };
+draw(0);
+</script></body></html>
