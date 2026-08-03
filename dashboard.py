@@ -159,31 +159,109 @@ def run_mock_loop(story_prompt):
 
     yield log("\n--- 测试流程结束 ---")
 
+# Phase 4 Refactored Logic for Tabbed Workflow
+def step1_dismantle_script(story_prompt):
+    script_brain = ScriptBrainMicroDismantler()
+    sb_result = script_brain.dismantle(story_prompt)
+    dismantled_data = sb_result.get("data", [])
+    if not dismantled_data:
+         dismantled_data = [{
+            "shot_id": "SH-001",
+            "Camera_and_Lighting": {"description": "特写，光线昏暗"},
+            "SceneDNA": {"description": "暴雨中的街道"},
+            "IdentityDNA": {"description": "男主，浑身湿透"},
+            "PerformanceDNA": {"description": "眉头紧锁"},
+            "PropDNA": {"description": "无"},
+            "VocalDNA": {"description": "无"}
+        }]
+    return json.dumps(dismantled_data, ensure_ascii=False, indent=2), dismantled_data
+
+def step2_scene_dna(edited_json_str):
+    try:
+        script_data = json.loads(edited_json_str)
+    except:
+        return None, "JSON 格式错误，请检查！"
+
+    scene_dna = SceneDNA()
+    # Mock visual feedback by returning a dummy image structure (or empty list for now since we don't have real images)
+    # The agent will just print to console via the bridge
+    scene_dna.compose_layout(script_data[0] if isinstance(script_data, list) else script_data)
+
+    return [], "SceneDNA 场景原图已生成（模拟），请审核！"
+
+def step3_identity_and_performance(edited_json_str):
+    try:
+        script_data = json.loads(edited_json_str)
+    except:
+        return None, "JSON 格式错误，请检查！"
+
+    first_shot = script_data[0] if isinstance(script_data, list) else script_data
+
+    identity_dna = IdentityDNA()
+    prop_dna = PropDNA()
+    perf_dna = PerformanceDNA()
+    vocal_dna = VocalDNA()
+
+    identity_dna.generate_fusion(first_shot, [])
+    prop_dna.synthesize_prop(first_shot)
+    perf_dna.retrieve_and_stitch("beat1", {})
+    vocal_dna.synthesize_voice("Hello", {})
+
+    return None, "表演与角色换脸视频生成完毕（模拟），等待最终审核！"
+
 # Define Gradio UI
 with gr.Blocks(title="CinemaDNA (DramaOS) Web Dashboard") as app:
-    gr.Markdown("# CinemaDNA (DramaOS) Web Dashboard")
+    gr.Markdown("# CinemaDNA (DramaOS) Web Dashboard - 人机协同控制台")
+
+    # Global state to pass the JSON across tabs
+    script_state = gr.State([])
 
     with gr.Row():
-        with gr.Column():
-            gr.Markdown("### 系统状态面板 (System Status)")
-            engine_status_text = gr.Markdown("🔴 引擎已关闭 (Stopped)")
-            toggle_engine_btn = gr.Button("启动/关闭本地后台引擎")
+        gr.Markdown("### 引擎控制 (System Status)")
+        engine_status_text = gr.Markdown("🔴 引擎已关闭 (Stopped)")
+        toggle_engine_btn = gr.Button("启动/关闭本地后台引擎")
 
-        with gr.Column():
-            gr.Markdown("### 流水线调度室 (Pipeline Control)")
+    with gr.Tabs():
+        with gr.Tab("Tab 1: 剧本中枢 (ScriptBrain)"):
             story_prompt_input = gr.Textbox(
                 label="一句话剧本输入框 (Story Prompt Input)",
                 value="男主角在暴雨中跪在女主家门前，请求原谅，气氛压抑。",
                 lines=2
             )
-            run_loop_btn = gr.Button("触发流水线 (Run Pipeline)", variant="primary")
+            dismantle_btn = gr.Button("运行拆解 (Run ScriptBrain)", variant="primary")
+            json_editor = gr.Code(label="JSON 分镜单 (可手动修改)", language="json", interactive=True)
 
-    gr.Markdown("### 实时日志窗口 (Real-time Log Viewer)")
-    log_output = gr.Textbox(label="Logs", lines=20, max_lines=30, interactive=False)
+        with gr.Tab("Tab 2: 场景生图审核 (SceneDNA)"):
+            scene_generate_btn = gr.Button("生成场景原图 (Generate Scenes)", variant="primary")
+            scene_gallery = gr.Gallery(label="SceneDNA 场景生成结果")
+            scene_status = gr.Markdown("等待生成...")
+            with gr.Row():
+                scene_approve_btn = gr.Button("同意并进入下一环节 (Approve)", variant="secondary")
+                scene_reject_btn = gr.Button("打回重绘 (Reject)", variant="stop")
+
+        with gr.Tab("Tab 3: 角色与表演审核 (Identity & Performance)"):
+            video_generate_btn = gr.Button("生成视频片段 (Generate Video)", variant="primary")
+            final_video = gr.Video(label="Identity & Performance 动态生成结果")
+            video_status = gr.Markdown("等待生成...")
+            with gr.Row():
+                video_approve_btn = gr.Button("最终审核通过 (Final Approve)", variant="secondary")
+                video_reject_btn = gr.Button("打回重拍 (Reject)", variant="stop")
 
     # Event handlers
     toggle_engine_btn.click(fn=toggle_engine, outputs=engine_status_text)
-    run_loop_btn.click(fn=run_mock_loop, inputs=story_prompt_input, outputs=log_output)
+
+    # Tab 1
+    dismantle_btn.click(fn=step1_dismantle_script, inputs=story_prompt_input, outputs=[json_editor, script_state])
+
+    # Tab 2
+    scene_generate_btn.click(fn=step2_scene_dna, inputs=json_editor, outputs=[scene_gallery, scene_status])
+    scene_approve_btn.click(fn=lambda: "审核通过，请前往 Tab 3", outputs=scene_status)
+    scene_reject_btn.click(fn=lambda: "已打回，请修改 JSON 或重新生成", outputs=scene_status)
+
+    # Tab 3
+    video_generate_btn.click(fn=step3_identity_and_performance, inputs=json_editor, outputs=[final_video, video_status])
+    video_approve_btn.click(fn=lambda: "【全流程完成】数据已回流资产库！", outputs=video_status)
+    video_reject_btn.click(fn=lambda: "【打回】请重新调整角色或表演参数！", outputs=video_status)
 
 if __name__ == "__main__":
     app.launch()
