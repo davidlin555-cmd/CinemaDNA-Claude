@@ -15,6 +15,12 @@ try:
 except ImportError:
     config = None
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 class ScriptBrainMicroDismantler:
     """
     ScriptBrain: 剧本微观拆解
@@ -30,8 +36,17 @@ class ScriptBrainMicroDismantler:
         self.llm_api_base = config.get("OPENAI_API_BASE", "https://api.openai.com/v1/chat/completions") if config else os.environ.get("OPENAI_API_BASE", "https://api.openai.com/v1/chat/completions")
 
         self.system_prompt = (
-            "你是一个专业的短剧分镜师。请根据用户输入的一句话剧本大纲，输出符合 DramaOS 规范的短剧分镜 JSON 数组。"
-            "每个数组元素必须包含：shot_id, scene_prompt, action, character_details。"
+            "你是一个专业的短剧分镜师（DramaOS 核心超级大脑）。请根据用户输入的一句话剧本大纲，进行深度的 Phase 4 架构拆解。\n"
+            "【强制规则】\n"
+            "1. 必须拆解出至少 15-20 个连续的分镜，确保能够支撑 30-60 秒时长的完整短剧剧情发展（起承转合）。\n"
+            "2. 输出必须是一个标准的 JSON 数组，每个对象代表一个镜头 (shot)。\n"
+            "3. 每个 shot 必须严格包含为 5 大 DNA 模块量身定制的详细参数字典：\n"
+            "   - \"shot_id\": 镜头编号 (如 \"SH-001\")\n"
+            "   - \"Camera_and_Lighting\": 包含景别 (e.g., 特写, 中景)、运镜方向、光影氛围。\n"
+            "   - \"SceneDNA\": 纯净的背景画面描述，用于独立生图，不应提及主要角色动作。\n"
+            "   - \"IdentityDNA\": 角色外观特征、服装、用于换脸的基准提示。\n"
+            "   - \"PerformanceDNA\": 角色面部微表情、肢体动作强度。\n"
+            "   - \"VocalDNA\": 台词文本 (若无台词则为空)、发音人性别/年龄建议、情绪激烈程度标签。\n"
             "只输出纯 JSON 数组，不要有任何其他解释文字或 markdown 标记。"
         )
 

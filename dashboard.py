@@ -22,12 +22,12 @@ def toggle_engine():
 
     if engine_process is None or engine_process.poll() is not None:
         # Need to start
-        acting_engine_dir = r"E:\projects\Drama_Acting_Engine-main"
+        acting_engine_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "acting_engine")
         cwd = acting_engine_dir if os.path.exists(acting_engine_dir) else "."
 
         try:
             engine_process = subprocess.Popen(
-                [sys.executable, "-m", "http.server", "8000"],
+                [sys.executable, "-m", "uvicorn", "main:app", "--port", "8000"],
                 cwd=cwd
             )
             return "🟢 引擎已在后台 8000 端口拉起 (Running)"

@@ -4,14 +4,12 @@ import time
 import os
 
 def main():
-    acting_engine_dir = r"E:\projects\Drama_Acting_Engine-main"
-    # Ensure the directory exists or we simulate it if it doesn't on this mock system.
-    # To avoid crashing immediately if the dir doesn't exist, we fallback to current dir.
+    acting_engine_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "acting_engine")
     cwd = acting_engine_dir if os.path.exists(acting_engine_dir) else "."
 
     print(f"Starting acting engine in background on port 8000 at {cwd}...")
     engine_process = subprocess.Popen(
-        [sys.executable, "-m", "http.server", "8000"],
+        [sys.executable, "-m", "uvicorn", "main:app", "--port", "8000"],
         cwd=cwd
     )
 

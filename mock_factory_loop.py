@@ -14,12 +14,12 @@ from cinemadna.audio.vocal_dna_agent import VocalDNA
 from cinemadna.qa.infinity_loop import VisionQAAgent, SolutionArchitect, BackflowAgent
 
 def main():
-    acting_engine_dir = r"E:\projects\Drama_Acting_Engine-main"
+    acting_engine_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "acting_engine")
     cwd = acting_engine_dir if os.path.exists(acting_engine_dir) else "."
 
     print("启动 Master Launcher...")
     engine_process = subprocess.Popen(
-        [sys.executable, "-m", "http.server", "8000"],
+        [sys.executable, "-m", "uvicorn", "main:app", "--port", "8000"],
         cwd=cwd
     )
     print("引擎已在后台 8000 端口拉起")
