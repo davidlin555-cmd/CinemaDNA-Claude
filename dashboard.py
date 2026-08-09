@@ -3,28 +3,32 @@ import pandas as pd
 
 # Dummy functions for callbacks
 def parse_script(outline, style):
-    # Dummy dataframe data
+    # Dummy dataframe data aligned with the new headers
     df = pd.DataFrame({
         "镜号": ["1", "2"],
-        "场景": ["街头", "室内"],
-        "动作": ["走动", "坐下"],
-        "角色": ["主角", "配角"],
-        "提示词": ["A person walking on the street", "Someone sitting in a room"]
+        "Camera_Lighting": ["Medium shot, natural light", "Close up, dramatic shadow"],
+        "SceneDNA": ["Street, daytime", "Room, night"],
+        "IdentityDNA": ["Hero, male, 25", "Villain, female, 30"],
+        "PerformanceDNA": ["Walking briskly", "Sitting tensely"],
+        "PropDNA": ["Briefcase", "Gun"],
+        "VocalDNA": ["Hey!", "Wait!"]
     })
     return df
 
-def generate_character(attributes):
-    # Dummy gallery output (empty list of images)
+def generate_identity(attributes):
     return []
 
 def generate_scene(attributes):
     return []
 
-def lock_assets():
+def generate_prop(attributes):
+    return []
+
+def render_performance(micro, macro):
     return None
 
-def render_shot(prompt, transition):
-    return None # Return dummy video path if possible, or None
+def synthesize_voice(text, emotion):
+    return None
 
 def assemble_final():
     return None
@@ -43,7 +47,7 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                 parse_btn = gr.Button("解析与拆解剧本 (Parse and Dismantle Script)")
             with gr.Row():
                 shot_list_df = gr.Dataframe(
-                    headers=["镜号", "场景", "动作", "角色", "提示词"],
+                    headers=["镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"],
                     label="分镜单 (Shot List)",
                     interactive=True,
                     row_count=5
@@ -51,50 +55,62 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
 
             parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=shot_list_df)
 
-        # Tab 2: 🗃️ 资产工坊 (The DNA Forge)
-        with gr.Tab("🗃️ 资产工坊 (The DNA Forge)"):
+        # Tab 2: 🗃️ 静态资产工坊 (Static DNA Forge)
+        with gr.Tab("🗃️ 静态资产工坊 (Static DNA Forge)"):
             with gr.Tabs():
-                with gr.Tab("角色库 (Character Library)"):
+                with gr.Tab("IdentityDNA (角色库)"):
                     with gr.Row():
                         with gr.Column():
-                            char_attributes = gr.Textbox(label="角色属性 (Character Attributes)", lines=3)
-                            char_gen_btn = gr.Button("生成角色 (Generate Character)")
+                            identity_attributes = gr.Textbox(label="角色特征 (Identity Attributes)", lines=3)
+                            identity_gen_btn = gr.Button("生成角色 (Generate Identity)")
                         with gr.Column():
-                            char_gallery = gr.Gallery(label="角色定妆照/三视图 (Character Reference Sheets)")
+                            identity_gallery = gr.Gallery(label="角色定妆照 (Identity Gallery)")
+                    identity_gen_btn.click(fn=generate_identity, inputs=identity_attributes, outputs=identity_gallery)
 
-                    char_gen_btn.click(fn=generate_character, inputs=char_attributes, outputs=char_gallery)
-
-                with gr.Tab("场景库 (Scene Library)"):
+                with gr.Tab("SceneDNA (场景库)"):
                     with gr.Row():
                         with gr.Column():
-                            scene_attributes = gr.Textbox(label="场景属性 (Scene Attributes)", lines=3)
+                            scene_attributes = gr.Textbox(label="环境描写 (Scene Attributes)", lines=3)
                             scene_gen_btn = gr.Button("生成场景 (Generate Scene)")
                         with gr.Column():
-                            scene_gallery = gr.Gallery(label="场景基准图 (Scene Reference Images)")
-
+                            scene_gallery = gr.Gallery(label="场景基准图 (Scene Gallery)")
                     scene_gen_btn.click(fn=generate_scene, inputs=scene_attributes, outputs=scene_gallery)
 
+                with gr.Tab("PropDNA (道具库)"):
+                    with gr.Row():
+                        with gr.Column():
+                            prop_attributes = gr.Textbox(label="道具描写 (Prop Attributes)", lines=3)
+                            prop_gen_btn = gr.Button("生成道具 (Generate Prop)")
+                        with gr.Column():
+                            prop_gallery = gr.Gallery(label="道具图 (Prop Gallery)")
+                    prop_gen_btn.click(fn=generate_prop, inputs=prop_attributes, outputs=prop_gallery)
+
+        # Tab 3: 🎬 动态表演导播台 (Performance Engine)
+        with gr.Tab("🎬 动态表演导播台 (Performance Engine)"):
             with gr.Row():
-                lock_assets_btn = gr.Button("锁定全部资产并进入拍摄 (Lock All Assets and Proceed to Shooting)")
+                with gr.Column():
+                    micro_expr = gr.Textbox(label="微表情 (Micro-expression)", lines=2)
+                    macro_action = gr.Textbox(label="肢体动作 (Macro-action)", lines=2)
+                    render_btn = gr.Button("🎬 渲染动作视频 (Render Performance)", variant="primary")
+                with gr.Column():
+                    perf_video = gr.Video(label="表演监视器 (Performance Monitor)")
 
-            lock_assets_btn.click(fn=lock_assets, inputs=[], outputs=[])
+            render_btn.click(fn=render_performance, inputs=[micro_expr, macro_action], outputs=perf_video)
 
-        # Tab 3: 🎬 片场导播台 (Director Studio)
-        with gr.Tab("🎬 片场导播台 (Director Studio)"):
+        # Tab 4: 🎙️ 声音车间 (VocalDNA Studio)
+        with gr.Tab("🎙️ 声音车间 (VocalDNA Studio)"):
             with gr.Row():
                 with gr.Column():
-                    locked_assets_gallery = gr.Gallery(label="锁定资产参考 (Locked Asset References)")
+                    dialogue_text = gr.Textbox(label="台词 (Dialogue)", lines=3)
+                    emotion_dropdown = gr.Dropdown(choices=["平静 (Calm)", "愤怒 (Angry)", "悲伤 (Sad)", "喜悦 (Happy)"], label="情绪标签 (Emotion)")
+                    synth_btn = gr.Button("合成语音 (Synthesize Voice)")
                 with gr.Column():
-                    shot_prompt = gr.Textbox(label="当前分镜提示词 (Current Shot Prompt)", lines=4)
-                    transition_checkbox = gr.Checkbox(label="启用首尾帧过渡 (Enable Start/End Frame Transition)")
-                    render_btn = gr.Button("渲染当前镜头 (Render Current Shot)", variant="primary") # Orange/primary button
-                with gr.Column():
-                    shot_video = gr.Video(label="当前分镜片段 (Current Shot Video)")
+                    vocal_audio = gr.Audio(label="试听音频 (Audio Preview)")
 
-            render_btn.click(fn=render_shot, inputs=[shot_prompt, transition_checkbox], outputs=shot_video)
+            synth_btn.click(fn=synthesize_voice, inputs=[dialogue_text, emotion_dropdown], outputs=vocal_audio)
 
-        # Tab 4: 🎞️ 终极剪辑室 (Final Assembly)
-        with gr.Tab("🎞️ 终极剪辑室 (Final Assembly)"):
+        # Tab 5: 🎞️ 终极剪辑室 (Infinity Assembly)
+        with gr.Tab("🎞️ 终极剪辑室 (Infinity Assembly)"):
             with gr.Row():
                 assemble_btn = gr.Button("一键合成最终成片 (One-Click Assemble Final Video)")
             with gr.Row():
