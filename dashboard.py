@@ -16,41 +16,56 @@ def _post_to_engine(endpoint, payload):
 
 # Real Backend Integrations
 def parse_script(file, outline, canvas, style, ratio):
-    # Dummy Markdown string for View A
-    markdown_str = """
-### 【场景 1】 街头，白天
-* **镜头 1**：Medium shot, natural light - 英雄 (男, 25) 快速走过。手里拿着手提箱。
-> "Hey!"
+    try:
+        dismantler = ScriptBrainMicroDismantler()
+        script_data = {"outline": outline, "style": style, "ratio": ratio}
 
-### 【场景 2】 室内，夜晚
-* **镜头 2**：Close up, dramatic shadow - 反派 (女, 30) 紧张地坐着。桌上有一把枪。
-> "Wait!"
-"""
+        # Call the actual backend dismantler logic
+        result = dismantler.dismantle(script_data)
 
-    dismantler = ScriptBrainMicroDismantler()
-    script_data = {"outline": outline, "style": style, "ratio": ratio}
+        if not result:
+            raise ValueError("LLM returned empty or null result.")
 
-    # Call the actual backend dismantler logic
-    result = dismantler.dismantle(script_data)
+        # Ensure result is a list for iteration
+        if not isinstance(result, list):
+            result = [result]
 
-    # If the real backend isn't ready or returns None, fallback to dummy
-    if not result:
-        df = pd.DataFrame({
-            "镜号": ["1", "2"],
-            "Camera_Lighting": ["Medium shot, natural light", "Close up, dramatic shadow"],
-            "SceneDNA": ["Street, daytime", "Room, night"],
-            "IdentityDNA": ["Hero, male, 25", "Villain, female, 30"],
-            "PerformanceDNA": ["Walking briskly", "Sitting tensely"],
-            "PropDNA": ["Briefcase", "Gun"],
-            "VocalDNA": ["Hey!", "Wait!"]
-        })
+        markdown_str = ""
+        current_scene = None
+
+        for shot in result:
+            # Safely extract fields
+            scene_dna = shot.get("SceneDNA", "")
+            shot_num = shot.get("镜号", "")
+            cam_light = shot.get("Camera_Lighting", "")
+            ident = shot.get("IdentityDNA", "")
+            perf = shot.get("PerformanceDNA", "")
+            prop = shot.get("PropDNA", "")
+            vocal = shot.get("VocalDNA", "")
+
+            # If scene changes or first scene, print the Scene header
+            if scene_dna != current_scene:
+                current_scene = scene_dna
+                markdown_str += f"\n### 【场景】 {scene_dna}\n"
+
+            # Format the shot list element
+            markdown_str += f"* **镜头 {shot_num}**：{cam_light} - {ident} {perf}。{prop}。\n"
+            if vocal:
+                markdown_str += f"> \"{vocal}\"\n"
+
+        # Convert the returned result JSON array into a dataframe with exact headers
+        df = pd.DataFrame(result, columns=[
+            "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
+        ])
+
         return markdown_str, df
 
-    # Convert the returned result JSON array into a dataframe with exact headers
-    df = pd.DataFrame(result, columns=[
-        "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
-    ])
-    return markdown_str, df
+    except Exception as e:
+        error_md = f"### ❌ 解析失败 (Parsing Failed)\n**Error Details:** {str(e)}"
+        empty_df = pd.DataFrame(columns=[
+            "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
+        ])
+        return error_md, empty_df
 
 def generate_identity(attributes, batch_size):
     response = _post_to_engine('/api/v1/identity', {"attributes": attributes, "batch_size": batch_size})
