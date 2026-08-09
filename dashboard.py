@@ -41,17 +41,26 @@ def parse_script(outline, style):
     ])
     return df
 
-def generate_identity(attributes):
-    response = _post_to_engine('/api/v1/identity', {"attributes": attributes})
+def generate_identity(attributes, batch_size):
+    response = _post_to_engine('/api/v1/identity', {"attributes": attributes, "batch_size": batch_size})
     return response.get("images", []) if response else []
 
-def generate_scene(attributes):
-    response = _post_to_engine('/api/v1/scene', {"attributes": attributes})
+def generate_scene(attributes, batch_size):
+    response = _post_to_engine('/api/v1/scene', {"attributes": attributes, "batch_size": batch_size})
     return response.get("images", []) if response else []
 
-def generate_prop(attributes):
-    response = _post_to_engine('/api/v1/prop', {"attributes": attributes})
+def generate_prop(attributes, batch_size):
+    response = _post_to_engine('/api/v1/prop', {"attributes": attributes, "batch_size": batch_size})
     return response.get("images", []) if response else []
+
+def lock_identity(index):
+    return f"已锁定身份资产编号: {index}"
+
+def lock_scene(index):
+    return f"已锁定场景基准图编号: {index}"
+
+def lock_prop(index):
+    return f"已锁定道具资产编号: {index}"
 
 def render_performance(micro, macro):
     response = _post_to_engine('/api/v1/performance', {"micro_expression": micro, "macro_action": macro})
@@ -93,28 +102,46 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                     with gr.Row():
                         with gr.Column():
                             identity_attributes = gr.Textbox(label="角色特征 (Identity Attributes)", lines=3)
+                            identity_batch = gr.Slider(minimum=1, maximum=4, value=4, step=1, label="生成数量 (Batch Size)")
                             identity_gen_btn = gr.Button("生成角色 (Generate Identity)")
                         with gr.Column():
-                            identity_gallery = gr.Gallery(label="角色定妆照 (Identity Gallery)")
-                    identity_gen_btn.click(fn=generate_identity, inputs=identity_attributes, outputs=identity_gallery)
+                            identity_gallery = gr.Gallery(label="角色定妆照 (Identity Gallery)", columns=2)
+                    with gr.Row():
+                        identity_sel_num = gr.Number(label="选中图片编号 (1-4)", minimum=1, maximum=4, step=1)
+                        identity_lock_btn = gr.Button("锁定该资产 (Lock Asset)", variant="primary")
+                        identity_lock_status = gr.Textbox(label="锁定状态预览 (Locked Asset Status)")
+                    identity_gen_btn.click(fn=generate_identity, inputs=[identity_attributes, identity_batch], outputs=identity_gallery)
+                    identity_lock_btn.click(fn=lock_identity, inputs=identity_sel_num, outputs=identity_lock_status)
 
                 with gr.Tab("SceneDNA (场景库)"):
                     with gr.Row():
                         with gr.Column():
                             scene_attributes = gr.Textbox(label="环境描写 (Scene Attributes)", lines=3)
+                            scene_batch = gr.Slider(minimum=1, maximum=4, value=4, step=1, label="生成数量 (Batch Size)")
                             scene_gen_btn = gr.Button("生成场景 (Generate Scene)")
                         with gr.Column():
-                            scene_gallery = gr.Gallery(label="场景基准图 (Scene Gallery)")
-                    scene_gen_btn.click(fn=generate_scene, inputs=scene_attributes, outputs=scene_gallery)
+                            scene_gallery = gr.Gallery(label="场景基准图 (Scene Gallery)", columns=2)
+                    with gr.Row():
+                        scene_sel_num = gr.Number(label="选中图片编号 (1-4)", minimum=1, maximum=4, step=1)
+                        scene_lock_btn = gr.Button("锁定该资产 (Lock Asset)", variant="primary")
+                        scene_lock_status = gr.Textbox(label="锁定状态预览 (Locked Asset Status)")
+                    scene_gen_btn.click(fn=generate_scene, inputs=[scene_attributes, scene_batch], outputs=scene_gallery)
+                    scene_lock_btn.click(fn=lock_scene, inputs=scene_sel_num, outputs=scene_lock_status)
 
                 with gr.Tab("PropDNA (道具库)"):
                     with gr.Row():
                         with gr.Column():
                             prop_attributes = gr.Textbox(label="道具描写 (Prop Attributes)", lines=3)
+                            prop_batch = gr.Slider(minimum=1, maximum=4, value=4, step=1, label="生成数量 (Batch Size)")
                             prop_gen_btn = gr.Button("生成道具 (Generate Prop)")
                         with gr.Column():
-                            prop_gallery = gr.Gallery(label="道具图 (Prop Gallery)")
-                    prop_gen_btn.click(fn=generate_prop, inputs=prop_attributes, outputs=prop_gallery)
+                            prop_gallery = gr.Gallery(label="道具图 (Prop Gallery)", columns=2)
+                    with gr.Row():
+                        prop_sel_num = gr.Number(label="选中图片编号 (1-4)", minimum=1, maximum=4, step=1)
+                        prop_lock_btn = gr.Button("锁定该资产 (Lock Asset)", variant="primary")
+                        prop_lock_status = gr.Textbox(label="锁定状态预览 (Locked Asset Status)")
+                    prop_gen_btn.click(fn=generate_prop, inputs=[prop_attributes, prop_batch], outputs=prop_gallery)
+                    prop_lock_btn.click(fn=lock_prop, inputs=prop_sel_num, outputs=prop_lock_status)
 
         # Tab 3: 🎬 动态表演导播台 (Performance Engine)
         with gr.Tab("🎬 动态表演导播台 (Performance Engine)"):
