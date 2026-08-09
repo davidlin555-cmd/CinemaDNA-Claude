@@ -1,34 +1,65 @@
 import gradio as gr
 import pandas as pd
+import requests
+from cinemadna.scriptbrain.micro_dismantler import ScriptBrainMicroDismantler
 
-# Dummy functions for callbacks
+# Backend API Helper
+def _post_to_engine(endpoint, payload):
+    url = f"http://127.0.0.1:8000{endpoint}"
+    try:
+        response = requests.post(url, json=payload, headers={'Content-Type': 'application/json'})
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error calling {url}: {e}")
+        return None
+
+# Real Backend Integrations
 def parse_script(outline, style):
-    # Dummy dataframe data aligned with the new headers
-    df = pd.DataFrame({
-        "镜号": ["1", "2"],
-        "Camera_Lighting": ["Medium shot, natural light", "Close up, dramatic shadow"],
-        "SceneDNA": ["Street, daytime", "Room, night"],
-        "IdentityDNA": ["Hero, male, 25", "Villain, female, 30"],
-        "PerformanceDNA": ["Walking briskly", "Sitting tensely"],
-        "PropDNA": ["Briefcase", "Gun"],
-        "VocalDNA": ["Hey!", "Wait!"]
-    })
+    dismantler = ScriptBrainMicroDismantler()
+    script_data = {"outline": outline, "style": style}
+
+    # Call the actual backend dismantler logic
+    result = dismantler.dismantle(script_data)
+
+    # If the real backend isn't ready or returns None, fallback to dummy
+    if not result:
+        df = pd.DataFrame({
+            "镜号": ["1", "2"],
+            "Camera_Lighting": ["Medium shot, natural light", "Close up, dramatic shadow"],
+            "SceneDNA": ["Street, daytime", "Room, night"],
+            "IdentityDNA": ["Hero, male, 25", "Villain, female, 30"],
+            "PerformanceDNA": ["Walking briskly", "Sitting tensely"],
+            "PropDNA": ["Briefcase", "Gun"],
+            "VocalDNA": ["Hey!", "Wait!"]
+        })
+        return df
+
+    # Convert the returned result JSON array into a dataframe with exact headers
+    df = pd.DataFrame(result, columns=[
+        "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
+    ])
     return df
 
 def generate_identity(attributes):
-    return []
+    response = _post_to_engine('/api/v1/identity', {"attributes": attributes})
+    return response.get("images", []) if response else []
 
 def generate_scene(attributes):
-    return []
+    response = _post_to_engine('/api/v1/scene', {"attributes": attributes})
+    return response.get("images", []) if response else []
 
 def generate_prop(attributes):
-    return []
+    response = _post_to_engine('/api/v1/prop', {"attributes": attributes})
+    return response.get("images", []) if response else []
 
 def render_performance(micro, macro):
-    return None
+    response = _post_to_engine('/api/v1/performance', {"micro_expression": micro, "macro_action": macro})
+    return response.get("video_url") if response else None
 
 def synthesize_voice(text, emotion):
-    return None
+    response = _post_to_engine('/api/v1/vocal', {"text": text, "emotion": emotion})
+    return response.get("audio_url") if response else None
 
 def assemble_final():
     return None
