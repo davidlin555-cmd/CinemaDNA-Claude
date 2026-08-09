@@ -138,7 +138,7 @@ def _check_budget_safety() -> tuple[str, str]:
 
 def _check_redline_gates() -> tuple[str, str]:
     try:
-        from asset_brain.identity_dna.gate import detect_single_real_clone  # noqa
+        from cinemadna.asset_brain.identity_dna.gate import detect_single_real_clone  # noqa
         return REAL, "IdentityDNA 单一真人克隆硬拦截、SceneDNA 纯AI退化拦截 全真实"
     except Exception:
         return MISSING, ""

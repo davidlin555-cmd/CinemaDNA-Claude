@@ -36,10 +36,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Iterable
 
-from asset_brain.common import schemas
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.store import AssetBrainStore
-from asset_brain.facade import (
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.facade import (
     OUTCOME_PENDING_HUMAN_REVIEW,
     OUTCOME_REJECTED,
     OUTCOME_REJECTED_HARD_BLOCK,

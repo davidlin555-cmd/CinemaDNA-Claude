@@ -11,8 +11,8 @@ from __future__ import annotations
 
 import pytest
 
-from asset_brain.identity_dna import fusion_mock
-from asset_brain.identity_dna.service import IdentityDNAService
+from cinemadna.asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.identity_dna.service import IdentityDNAService
 from orchestrator import repair as rp
 from orchestrator.pipeline import OrchestratorError, PipelineOrchestrator
 

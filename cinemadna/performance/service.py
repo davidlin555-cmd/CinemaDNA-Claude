@@ -23,7 +23,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Final
 
-from asset_brain.common import schemas
+from cinemadna.asset_brain.common import schemas
 from director.shot_contract import SHOT_CLOSEUP, SHOT_INSERT, SHOT_REACTION, sign_contract
 
 #: 性格关键词 → 标志性微表情（Performance Bible 的种子）

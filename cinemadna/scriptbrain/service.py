@@ -21,7 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from asset_brain.common import schemas
+from cinemadna.asset_brain.common import schemas
 
 from . import agents
 from .brief import ScriptBrief

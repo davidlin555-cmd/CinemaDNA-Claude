@@ -10,18 +10,18 @@ from __future__ import annotations
 
 import pytest
 
-from asset_brain.common.quad import Quad
-from asset_brain.common.service_base import AssetServiceError
-from asset_brain.common.store import AssetBrainStore
-from asset_brain.common.workorder import WorkorderStatus
-from asset_brain.facade import (
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.service_base import AssetServiceError
+from cinemadna.asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.common.workorder import WorkorderStatus
+from cinemadna.asset_brain.facade import (
     OUTCOME_BACKFLOWED,
     OUTCOME_REJECTED_HARD_BLOCK,
     OUTCOME_REUSED,
     AssetBrainFacade,
 )
-from asset_brain.identity_dna import fusion_mock
-from asset_brain.identity_dna.gate import (
+from cinemadna.asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.identity_dna.gate import (
     BLOCK_FUSION_POLICY_DISABLED,
     BLOCK_INSUFFICIENT_FUSION_SOURCES,
     BLOCK_PUBLIC_FIGURE,
@@ -34,7 +34,7 @@ from asset_brain.identity_dna.gate import (
     detect_single_real_clone,
     run_identity_gate,
 )
-from asset_brain.identity_dna.service import IdentityDNAService
+from cinemadna.asset_brain.identity_dna.service import IdentityDNAService
 
 CHAR = {
     "character_id": "char_linwan",

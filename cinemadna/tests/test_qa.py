@@ -6,8 +6,8 @@ import copy
 
 import pytest
 
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad
 from director.shot_contract import SHOT_CLOSEUP, SHOT_MEDIUM, new_shot_contract
 from performance.service import PerformanceDNAService
 from qa.agents import (

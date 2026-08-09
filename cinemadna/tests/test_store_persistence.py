@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.common.store import AssetBrainStore
 
 
 class TestPersistence:
@@ -73,7 +73,7 @@ class TestBackwardCompat:
 
     def test_workorders_not_persisted(self, tmp_path):
         # 临时数据(workorder/gate/backflow)不落盘，只库持久化
-        from asset_brain.common.store import AssetBrainStore
+        from cinemadna.asset_brain.common.store import AssetBrainStore
         lib = tmp_path / "lib"
         s1 = AssetBrainStore(library_dir=lib)
         s1.put_gate_report({"gate_id": "g1", "passed": True})

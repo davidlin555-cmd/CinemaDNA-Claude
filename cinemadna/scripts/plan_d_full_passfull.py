@@ -83,7 +83,7 @@ def main() -> int:
     registry = BackendRegistry(default=be)
 
     # 工厂资产库（跨生产持久化，在 OUT 之外不被 wipe）→ 复用真触发 + 只存好资产
-    from asset_brain.common.store import AssetBrainStore
+    from cinemadna.asset_brain.common.store import AssetBrainStore
     factory_lib = Path(__file__).resolve().parents[1] / "factory_library"
     orc = PipelineOrchestrator(
         bundle_root=OUT, bundle_date="20260724",

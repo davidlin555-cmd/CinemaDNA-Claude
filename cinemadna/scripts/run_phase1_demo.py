@@ -22,7 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from asset_brain.identity_dna import fusion_mock  # noqa: E402
+from cinemadna.asset_brain.identity_dna import fusion_mock  # noqa: E402
 from orchestrator import ParallelCapacityError, PipelineOrchestrator  # noqa: E402
 
 SCRIPT_PATH = Path(__file__).resolve().parents[1] / "mocks" / "sample_shooting_script.json"

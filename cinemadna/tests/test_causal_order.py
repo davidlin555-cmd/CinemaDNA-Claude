@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from audio.mixer import AudioMixer, DialogueClip
 from audio.service import AudioDNAService
-from asset_brain.prop_dna.service import PropDNAService
+from cinemadna.asset_brain.prop_dna.service import PropDNAService
 
 from tests.test_director import ready_contract
 

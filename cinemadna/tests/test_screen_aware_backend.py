@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.bundle import Bundle
 from render.backend import MediaSink, RenderRequest
 from render.budget import BudgetGate, confirm_yes
 from render.screen_aware_backend import (

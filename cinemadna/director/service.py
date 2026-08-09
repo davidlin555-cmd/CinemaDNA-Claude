@@ -18,10 +18,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-from asset_brain.common import schemas
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad
-from asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.store import AssetBrainStore
 
 from .continuity import build_ledger, check_continuity
 from .shot_contract import new_shot_contract

@@ -9,10 +9,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad
-from asset_brain.facade import OUTCOME_BACKFLOWED, AssetBrainFacade
-from asset_brain.prop_dna.screen_templates import (
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.facade import OUTCOME_BACKFLOWED, AssetBrainFacade
+from cinemadna.asset_brain.prop_dna.screen_templates import (
     classify_screen_prop,
     render_screen_html,
 )

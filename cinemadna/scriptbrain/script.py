@@ -15,7 +15,7 @@ from __future__ import annotations
 import re
 from typing import Any, Final
 
-from asset_brain.common import schemas
+from cinemadna.asset_brain.common import schemas
 
 from .agents import make_script_id
 from .brief import ScriptBrief

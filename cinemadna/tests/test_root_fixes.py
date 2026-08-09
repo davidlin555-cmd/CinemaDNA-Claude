@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.bundle import Bundle
 from audio.service import build_dialogue_vtt
 from narrative.density import DensityQAService, VERDICT_PASS
 from render.backend import MediaSink, RenderRequest

@@ -21,9 +21,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from asset_brain.common.bundle import Bundle  # noqa: E402
-from asset_brain.common.quad import Quad  # noqa: E402
-from asset_brain.facade import AssetBrainFacade  # noqa: E402
+from cinemadna.asset_brain.common.bundle import Bundle  # noqa: E402
+from cinemadna.asset_brain.common.quad import Quad  # noqa: E402
+from cinemadna.asset_brain.facade import AssetBrainFacade  # noqa: E402
 from assets_real.screen_render import ChromeScreenshotBackend  # noqa: E402
 from prerender.cross_validation import cross_model_validate  # noqa: E402
 from prerender.service import PreRenderService  # noqa: E402

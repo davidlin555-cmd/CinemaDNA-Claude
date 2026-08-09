@@ -11,8 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common import schemas
-from asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.identity_dna import fusion_mock
 from director.shot_contract import STATUS_RENDERED
 from orchestrator.pipeline import OrchestratorError, PipelineOrchestrator
 from orchestrator.story import InvalidStageTransition, StoryStage

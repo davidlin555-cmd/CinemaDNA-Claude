@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from typing import Any, Final
 
-from asset_brain.common import schemas
+from cinemadna.asset_brain.common import schemas
 from director.shot_contract import (
     SHOT_CLOSEUP,
     SHOT_ESTABLISHING,

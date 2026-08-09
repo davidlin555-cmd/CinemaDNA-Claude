@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import pytest
 
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad
 from audio.service import AudioDNAService, audio_review, build_dialogue_vtt
 from audio.tts import ElevenLabsTTSBackend, TTSError, estimate_duration
 from audio import voices

@@ -16,9 +16,9 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common import schemas
-from asset_brain.common.quad import Quad
-from asset_brain.facade import OUTCOME_BACKFLOWED, OUTCOME_REUSED, AssetBrainFacade
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.facade import OUTCOME_BACKFLOWED, OUTCOME_REUSED, AssetBrainFacade
 from orchestrator.pipeline import OrchestratorError, PipelineOrchestrator
 from scriptbrain import (
     GATE_SHOOTING_SCRIPT,

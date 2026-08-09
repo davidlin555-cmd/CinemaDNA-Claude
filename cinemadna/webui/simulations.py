@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any, Final
 
-from asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.identity_dna import fusion_mock
 
 SIM_NONE: Final = "none"
 SIM_SCENE_REVIEW: Final = "scene_rights_review"

@@ -293,7 +293,7 @@ def summary() -> dict[str, Any]:
 
 
 def _now() -> str:
-    from asset_brain.common import schemas
+    from cinemadna.asset_brain.common import schemas
     return schemas.utc_now_iso()
 
 

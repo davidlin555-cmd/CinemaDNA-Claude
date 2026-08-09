@@ -10,8 +10,8 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from asset_brain.identity_dna import fusion_mock
-from asset_brain.scene_dna.service import SceneDNAService
+from cinemadna.asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.scene_dna.service import SceneDNAService
 from render.backend import ffmpeg_available
 from webui.app import create_app
 from webui.state import FactoryWorkspace
@@ -183,7 +183,7 @@ class TestHumanReview:
 
     def test_real_face_holds_for_face_review_then_approve(self, client, monkeypatch):
         """生成真实人脸 → 人工点 2（人脸审核）→ 审核页出现 → 通过后自动续跑。"""
-        from asset_brain.identity_dna.service import IdentityDNAService
+        from cinemadna.asset_brain.identity_dna.service import IdentityDNAService
         original = IdentityDNAService.mock_multi_face_fusion
 
         def patched(self, workorder):

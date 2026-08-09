@@ -16,7 +16,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from asset_brain.common import schemas
+from cinemadna.asset_brain.common import schemas
 from director.shot_contract import SHOT_REACTION
 
 TARGET_DIRECTING = "DIRECTING"

@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any, Final
 
-from asset_brain.common.hashing import stable_score
+from cinemadna.asset_brain.common.hashing import stable_score
 
 from .shot_contract import (
     SHOT_CLOSEUP,

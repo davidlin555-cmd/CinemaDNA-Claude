@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from asset_brain.identity_dna.gate import HardBlockOverrideError
+from cinemadna.asset_brain.identity_dna.gate import HardBlockOverrideError
 from orchestrator.pipeline import OrchestratorError
 from orchestrator.story import StoryStage, StoryStatus
 from render.assembly import TARGET_MAX_SEC, TARGET_MIN_SEC

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from asset_brain.common import schemas
+from cinemadna.asset_brain.common import schemas
 
 
 def build_ledger(

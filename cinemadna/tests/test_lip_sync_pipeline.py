@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.bundle import Bundle
 from orchestrator.pipeline import PipelineOrchestrator
 
 

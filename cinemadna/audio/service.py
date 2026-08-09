@@ -18,8 +18,8 @@ import hashlib
 from dataclasses import dataclass, field
 from typing import Any
 
-from asset_brain.common import schemas
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.bundle import Bundle
 from director.shot_contract import (
     MAX_SHOT_DURATION_SEC,
     MIN_SHOT_DURATION_SEC,

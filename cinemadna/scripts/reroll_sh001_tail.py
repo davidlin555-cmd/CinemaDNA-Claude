@@ -22,7 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from asset_brain.common.bundle import Bundle  # noqa: E402
+from cinemadna.asset_brain.common.bundle import Bundle  # noqa: E402
 from assets_real.image_backend import TogetherImageBackend  # noqa: E402
 from identity.fal_pulid import FalPuLIDBackend  # noqa: E402
 from identity.foundry import IdentityFoundry  # noqa: E402

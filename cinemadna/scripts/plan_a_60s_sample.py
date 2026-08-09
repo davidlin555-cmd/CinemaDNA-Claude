@@ -23,7 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from asset_brain.prop_dna import screen_templates  # noqa: F401,E402  (确保可用)
+from cinemadna.asset_brain.prop_dna import screen_templates  # noqa: F401,E402  (确保可用)
 from assets_real.screen_render import ChromeScreenshotBackend  # noqa: E402
 from audio.mixer import AudioMixer  # noqa: E402
 from audio.tts_edge import EdgeTTSBackend  # noqa: E402

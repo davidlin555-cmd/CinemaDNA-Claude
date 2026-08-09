@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import pytest
 
-from asset_brain.common import schemas
-from asset_brain.common.quad import Quad, QuadValidationError
-from asset_brain.common.workorder import (
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.quad import Quad, QuadValidationError
+from cinemadna.asset_brain.common.workorder import (
     InvalidStateTransition,
     WorkorderStatus,
     can_transition,

@@ -14,10 +14,10 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common.quad import Quad
-from asset_brain.identity_dna import fusion_mock
-from asset_brain.identity_dna.service import IdentityDNAService
-from asset_brain.scene_dna.service import SceneDNAService
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.identity_dna.service import IdentityDNAService
+from cinemadna.asset_brain.scene_dna.service import SceneDNAService
 from orchestrator.pipeline import (
     ParallelCapacityError,
     PipelineOrchestrator,

@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.bundle import Bundle
 
 from .contract_v5 import contract_v5_view
 from .gate import PreRenderGateResult, run_prerender_gate

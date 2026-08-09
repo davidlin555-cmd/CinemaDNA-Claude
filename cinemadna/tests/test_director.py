@@ -12,8 +12,8 @@ import copy
 
 import pytest
 
-from asset_brain.common.quad import Quad
-from asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.store import AssetBrainStore
 from director.continuity import build_ledger, check_continuity
 from director.service import DirectorDNAService, DirectorError
 from director.shot_contract import (

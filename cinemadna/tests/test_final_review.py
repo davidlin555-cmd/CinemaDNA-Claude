@@ -34,7 +34,7 @@ from final_review.service import (
     VERDICT_REJECTED,
     FinalReviewService,
 )
-from asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.quad import Quad
 
 HASH_A = "sha256:" + "a" * 64
 HASH_B = "sha256:" + "b" * 64

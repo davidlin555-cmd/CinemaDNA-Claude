@@ -35,9 +35,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Final, Protocol, runtime_checkable
 
-from asset_brain.common import schemas
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.hashing import asset_hash_of, stable_score, stable_unit
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.hashing import asset_hash_of, stable_score, stable_unit
 
 # ---------------------------------------------------------------------------
 # 错误分类

@@ -26,8 +26,8 @@ import tempfile
 from pathlib import Path
 from typing import Any, Final
 
-from asset_brain.common import schemas
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.bundle import Bundle
 
 #: 标杆样片目标时长区间（主规格 §里程碑：30–60 秒）
 TARGET_MIN_SEC: Final = 30.0

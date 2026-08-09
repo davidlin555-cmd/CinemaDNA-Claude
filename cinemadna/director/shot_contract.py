@@ -23,9 +23,9 @@ from __future__ import annotations
 import re
 from typing import Any, Final
 
-from asset_brain.common import schemas
-from asset_brain.common.hashing import asset_hash_of, sha256_hex
-from asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.hashing import asset_hash_of, sha256_hex
+from cinemadna.asset_brain.common.quad import Quad
 
 # ---------------------------------------------------------------------------
 # 枚举

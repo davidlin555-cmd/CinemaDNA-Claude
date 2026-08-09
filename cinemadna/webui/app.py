@@ -26,8 +26,8 @@ from typing import Any
 from fastapi import Body, FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 
-from asset_brain.common.service_base import AssetServiceError
-from asset_brain.identity_dna.gate import HardBlockOverrideError
+from cinemadna.asset_brain.common.service_base import AssetServiceError
+from cinemadna.asset_brain.identity_dna.gate import HardBlockOverrideError
 from director.shot_contract import RenderNotAllowedError, ShotContractError
 from orchestrator.pipeline import OrchestratorError, StoryNotFoundError
 from orchestrator.story import InvalidStageTransition

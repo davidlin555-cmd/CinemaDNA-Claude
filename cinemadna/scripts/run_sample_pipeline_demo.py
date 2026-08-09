@@ -27,7 +27,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from asset_brain.common import schemas  # noqa: E402
+from cinemadna.asset_brain.common import schemas  # noqa: E402
 from orchestrator import PipelineOrchestrator  # noqa: E402
 from render.backend import ffmpeg_available  # noqa: E402
 from render.registry import mock_registry, placeholder_registry  # noqa: E402

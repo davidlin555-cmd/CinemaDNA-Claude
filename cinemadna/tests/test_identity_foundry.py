@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.bundle import Bundle
 from identity.foundry import IdentityFoundry, IdentityFoundryError, anchor_prompt
 
 

@@ -21,7 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from asset_brain.prop_dna.screen_templates import render_screen_html  # noqa: E402
+from cinemadna.asset_brain.prop_dna.screen_templates import render_screen_html  # noqa: E402
 from assets_real.screen_render import ChromeScreenshotBackend  # noqa: E402
 from final_review.media_probe import MediaProbe  # noqa: E402
 from final_review.vision_judge import VisionJudge  # noqa: E402

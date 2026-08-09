@@ -10,15 +10,15 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad
-from asset_brain.common.store import AssetBrainStore
-from asset_brain.facade import (
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.facade import (
     OUTCOME_BACKFLOWED,
     OUTCOME_PENDING_HUMAN_REVIEW,
     AssetBrainFacade,
 )
-from asset_brain.identity_dna.gate import (
+from cinemadna.asset_brain.identity_dna.gate import (
     BLOCK_INSUFFICIENT_FUSION_SOURCES,
     BLOCK_SINGLE_REAL_PERSON,
     detect_single_real_clone,
@@ -91,7 +91,7 @@ class TestImageBackend:
 class TestSyntheticFacePassesRedline:
     def test_single_synthetic_source_is_ok(self):
         """纯合成脸（1 个合成来源、非真人）→ 不触发"融合源不足"。"""
-        from asset_brain.identity_dna.fusion_mock import synthetic_face_source
+        from cinemadna.asset_brain.identity_dna.fusion_mock import synthetic_face_source
         pack = {"fusion_sources": synthetic_face_source("wo1", "02_cast/x/face.png"),
                 "public_figure_matches": []}
         assert detect_single_real_clone(pack) == []
@@ -105,7 +105,7 @@ class TestSyntheticFacePassesRedline:
         assert BLOCK_SINGLE_REAL_PERSON in blocks
 
     def test_synthetic_gate_full_pass(self):
-        from asset_brain.identity_dna.fusion_mock import synthetic_face_source
+        from cinemadna.asset_brain.identity_dna.fusion_mock import synthetic_face_source
         pack = {"workorder_id": "wo1", "naturalness": 0.9, "ethnicity_match": 0.9,
                 "family_consistency": 1.0, "age_line": {},
                 "fusion_sources": synthetic_face_source("wo1", "x.png"),

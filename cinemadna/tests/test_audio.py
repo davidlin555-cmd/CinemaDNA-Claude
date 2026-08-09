@@ -14,7 +14,7 @@ from director.shot_contract import (
     new_shot_contract,
     sign_contract,
 )
-from asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.quad import Quad
 
 CHARS = {"char_a": {"character_id": "char_a", "name": "林", "gender": "female"},
          "char_nogender": {"character_id": "char_nogender", "name": "无性别"}}

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import pytest
 
-from asset_brain.common.quad import Quad
-from asset_brain.common.service_base import AssetServiceError
-from asset_brain.common.store import AssetBrainStore
-from asset_brain.facade import OUTCOME_BACKFLOWED, OUTCOME_REUSED, AssetBrainFacade
-from asset_brain.prop_dna.gate import run_prop_gate
-from asset_brain.prop_dna.service import PropDNAService
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.service_base import AssetServiceError
+from cinemadna.asset_brain.common.store import AssetBrainStore
+from cinemadna.asset_brain.facade import OUTCOME_BACKFLOWED, OUTCOME_REUSED, AssetBrainFacade
+from cinemadna.asset_brain.prop_dna.gate import run_prop_gate
+from cinemadna.asset_brain.prop_dna.service import PropDNAService
 
 PROP = {
     "prop_id": "prop_hospital_bill",

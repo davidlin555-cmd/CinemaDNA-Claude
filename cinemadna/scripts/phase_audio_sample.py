@@ -17,8 +17,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import config  # noqa: E402
-from asset_brain.common.bundle import Bundle  # noqa: E402
-from asset_brain.common.quad import Quad  # noqa: E402
+from cinemadna.asset_brain.common.bundle import Bundle  # noqa: E402
+from cinemadna.asset_brain.common.quad import Quad  # noqa: E402
 from audio.service import AudioDNAService  # noqa: E402
 from audio.tts import ElevenLabsTTSBackend  # noqa: E402
 from director.shot_contract import (  # noqa: E402

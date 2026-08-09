@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.quad import Quad
 from director.shot_contract import (
     MOUTH_SILENT_CLOSED,
     SHOT_CLOSEUP,
@@ -244,7 +244,7 @@ class TestRealAssetValidation:
     def test_asset_checker_accepts_absolute_path(self, tmp_path):
         """跨剧回流复用：场景图存的是绝对路径，checker 也能核验。"""
         from prerender.service import PreRenderService
-        from asset_brain.common.bundle import Bundle
+        from cinemadna.asset_brain.common.bundle import Bundle
         bundle = Bundle(tmp_path, "b_abs").ensure()
         real = bundle.path_for("03_scene/EP001_SC001/scene.png")
         real.parent.mkdir(parents=True, exist_ok=True)

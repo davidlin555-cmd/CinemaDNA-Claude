@@ -12,19 +12,19 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common import schemas
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad, QuadValidationError
-from asset_brain.common.service_base import AssetServiceError
-from asset_brain.common.workorder import WorkorderStatus
-from asset_brain.facade import (
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad, QuadValidationError
+from cinemadna.asset_brain.common.service_base import AssetServiceError
+from cinemadna.asset_brain.common.workorder import WorkorderStatus
+from cinemadna.asset_brain.facade import (
     OUTCOME_BACKFLOWED,
     OUTCOME_REJECTED,
     OUTCOME_REJECTED_HARD_BLOCK,
     OUTCOME_REUSED,
 )
-from asset_brain.identity_dna import fusion_mock
-from asset_brain.identity_dna.gate import BLOCK_SINGLE_REAL_PERSON
+from cinemadna.asset_brain.identity_dna import fusion_mock
+from cinemadna.asset_brain.identity_dna.gate import BLOCK_SINGLE_REAL_PERSON
 from orchestrator.pipeline import ParallelCapacityError, PipelineOrchestrator
 from orchestrator.story import (
     REPAIR_TARGETS,
@@ -189,7 +189,7 @@ class TestCriterion3IdentityHardBlock:
         assert orc.store.character_registry["char_clone"]["gate_passed"] is True
 
     def test_human_cannot_override(self, tmp_path):
-        from asset_brain.identity_dna.gate import HardBlockOverrideError
+        from cinemadna.asset_brain.identity_dna.gate import HardBlockOverrideError
 
         orc = build_factory(tmp_path)
         s, res = run_story(orc, self._clone_script(), "C")
@@ -403,8 +403,8 @@ class TestCriterion6ParallelProduction:
 class TestCriterion7CorePathCoverage:
     def test_workorder_state_machine_edges(self):
         """通用 Workorder 状态机：每条边都被走过一次。"""
-        from asset_brain.common.quad import Quad as Q
-        from asset_brain.common.workorder import new_workorder
+        from cinemadna.asset_brain.common.quad import Quad as Q
+        from cinemadna.asset_brain.common.workorder import new_workorder
 
         def fresh():
             return new_workorder(

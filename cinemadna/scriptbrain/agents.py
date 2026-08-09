@@ -16,8 +16,8 @@ from __future__ import annotations
 
 from typing import Any, Sequence, TypeVar
 
-from asset_brain.common import schemas
-from asset_brain.common.hashing import sha256_hex, stable_score, stable_unit
+from cinemadna.asset_brain.common import schemas
+from cinemadna.asset_brain.common.hashing import sha256_hex, stable_score, stable_unit
 
 from .brief import ScriptBrief
 from .library import (

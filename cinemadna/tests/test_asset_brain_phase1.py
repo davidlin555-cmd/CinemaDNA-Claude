@@ -12,17 +12,17 @@ from pathlib import Path
 
 import pytest
 
-from asset_brain.common.bundle import Bundle
-from asset_brain.common.quad import Quad
-from asset_brain.common.service_base import AssetServiceError
-from asset_brain.facade import (
+from cinemadna.asset_brain.common.bundle import Bundle
+from cinemadna.asset_brain.common.quad import Quad
+from cinemadna.asset_brain.common.service_base import AssetServiceError
+from cinemadna.asset_brain.facade import (
     OUTCOME_BACKFLOWED,
     OUTCOME_PENDING_HUMAN_REVIEW,
     OUTCOME_REJECTED,
     OUTCOME_REUSED,
     AssetBrainFacade,
 )
-from asset_brain.scene_dna.service import SceneDNAService
+from cinemadna.asset_brain.scene_dna.service import SceneDNAService
 
 SCRIPT_PATH = Path(__file__).resolve().parents[1] / "mocks" / "sample_shooting_script.json"
 
