@@ -15,9 +15,20 @@ def _post_to_engine(endpoint, payload):
         return None
 
 # Real Backend Integrations
-def parse_script(outline, style):
+def parse_script(file, outline, canvas, style, ratio):
+    # Dummy Markdown string for View A
+    markdown_str = """
+### 【场景 1】 街头，白天
+* **镜头 1**：Medium shot, natural light - 英雄 (男, 25) 快速走过。手里拿着手提箱。
+> "Hey!"
+
+### 【场景 2】 室内，夜晚
+* **镜头 2**：Close up, dramatic shadow - 反派 (女, 30) 紧张地坐着。桌上有一把枪。
+> "Wait!"
+"""
+
     dismantler = ScriptBrainMicroDismantler()
-    script_data = {"outline": outline, "style": style}
+    script_data = {"outline": outline, "style": style, "ratio": ratio}
 
     # Call the actual backend dismantler logic
     result = dismantler.dismantle(script_data)
@@ -33,13 +44,13 @@ def parse_script(outline, style):
             "PropDNA": ["Briefcase", "Gun"],
             "VocalDNA": ["Hey!", "Wait!"]
         })
-        return df
+        return markdown_str, df
 
     # Convert the returned result JSON array into a dataframe with exact headers
     df = pd.DataFrame(result, columns=[
         "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
     ])
-    return df
+    return markdown_str, df
 
 def generate_identity(attributes, batch_size):
     response = _post_to_engine('/api/v1/identity', {"attributes": attributes, "batch_size": batch_size})
@@ -79,21 +90,34 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
     with gr.Tabs():
         # Tab 1: 📝 剧本中枢 (ScriptBrain)
         with gr.Tab("📝 剧本中枢 (ScriptBrain)"):
-            with gr.Row():
-                script_outline = gr.Textbox(label="剧本大纲 (Script Outline)", placeholder="输入剧本大纲...", lines=5)
-            with gr.Row():
-                style_dropdown = gr.Dropdown(choices=["写实 (Realistic)", "3D", "动漫 (Anime)"], label="画风 (Style)")
-            with gr.Row():
-                parse_btn = gr.Button("解析与拆解剧本 (Parse and Dismantle Script)")
-            with gr.Row():
-                shot_list_df = gr.Dataframe(
-                    headers=["镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"],
-                    label="分镜单 (Shot List)",
-                    interactive=True,
-                    row_count=5
-                )
+            with gr.Group():
+                gr.Markdown("### 剧本创作 (Script Creation)")
+                with gr.Tabs():
+                    with gr.Tab("上传剧本 (.docx/.txt)"):
+                        script_file = gr.File(label="上传剧本文件", file_types=[".txt", ".docx"])
+                    with gr.Tab("AI 生剧本 (输入大纲)"):
+                        script_outline = gr.Textbox(label="剧本大纲", placeholder="输入剧本大纲让 AI 生成详细剧本...", lines=5)
+                    with gr.Tab("自由画布"):
+                        script_canvas = gr.Textbox(label="自由编辑区", placeholder="在这里自由书写...", lines=5)
 
-            parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=shot_list_df)
+                with gr.Row():
+                    style_dropdown = gr.Dropdown(choices=["写实 (Realistic)", "3D渲染 (3D Render)", "二次元动漫 (Anime)"], label="画风 (Style)", value="写实 (Realistic)")
+                    ratio_dropdown = gr.Dropdown(choices=["9:16 (竖屏)", "16:9 (横屏)", "1:1 (方块)"], label="视频比例 (Aspect Ratio)", value="9:16 (竖屏)")
+                    parse_btn = gr.Button("立即创作 / 解析剧本", variant="primary")
+
+            gr.Markdown("### 剧本拆解成果 (Dismantled Results)")
+            with gr.Tabs():
+                with gr.Tab("视图 A (文本流分镜)"):
+                    shot_list_md = gr.Markdown("此处展示流式分镜文本...", label="文本流分镜")
+                with gr.Tab("视图 B (五大 DNA 任务表)"):
+                    shot_list_df = gr.Dataframe(
+                        headers=["镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"],
+                        label="分镜单 (Shot List)",
+                        interactive=True,
+                        row_count=5
+                    )
+
+            parse_btn.click(fn=parse_script, inputs=[script_file, script_outline, script_canvas, style_dropdown, ratio_dropdown], outputs=[shot_list_md, shot_list_df])
 
         # Tab 2: 🗃️ 静态资产工坊 (Static DNA Forge)
         with gr.Tab("🗃️ 静态资产工坊 (Static DNA Forge)"):
