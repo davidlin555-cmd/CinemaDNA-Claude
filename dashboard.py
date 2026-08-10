@@ -5,14 +5,10 @@ from cinemadna.scriptbrain.micro_dismantler import ScriptBrainMicroDismantler
 
 # Backend API Helper
 def _post_to_engine(endpoint, payload):
-    url = f"http://127.0.0.1:8000{endpoint}"
-    try:
-        response = requests.post(url, json=payload, headers={'Content-Type': 'application/json'})
-        response.raise_for_status()
-        return response.json()
-    except requests.RequestException as e:
-        print(f"Error calling {url}: {e}")
-        return None
+    url = f"http://127.0.0.1:8700{endpoint}"
+    response = requests.post(url, json=payload, headers={'Content-Type': 'application/json'})
+    response.raise_for_status()
+    return response.json()
 
 # Real Backend Integrations
 def parse_script(file, outline, canvas, style, ratio):
@@ -68,16 +64,28 @@ def parse_script(file, outline, canvas, style, ratio):
         return error_md, empty_df
 
 def generate_identity(attributes, batch_size):
-    response = _post_to_engine('/api/v1/identity', {"attributes": attributes, "batch_size": batch_size})
-    return response.get("images", []) if response else []
+    try:
+        response = _post_to_engine('/api/v1/identity', {"attributes": attributes, "batch_size": batch_size})
+        return response.get("images", [])
+    except Exception as e:
+        print(f"Error in generate_identity: {e}")
+        return []
 
 def generate_scene(attributes, batch_size):
-    response = _post_to_engine('/api/v1/scene', {"attributes": attributes, "batch_size": batch_size})
-    return response.get("images", []) if response else []
+    try:
+        response = _post_to_engine('/api/v1/scene', {"attributes": attributes, "batch_size": batch_size})
+        return response.get("images", [])
+    except Exception as e:
+        print(f"Error in generate_scene: {e}")
+        return []
 
 def generate_prop(attributes, batch_size):
-    response = _post_to_engine('/api/v1/prop', {"attributes": attributes, "batch_size": batch_size})
-    return response.get("images", []) if response else []
+    try:
+        response = _post_to_engine('/api/v1/prop', {"attributes": attributes, "batch_size": batch_size})
+        return response.get("images", [])
+    except Exception as e:
+        print(f"Error in generate_prop: {e}")
+        return []
 
 def lock_identity(index):
     return f"已锁定身份资产编号: {index}"
@@ -89,12 +97,20 @@ def lock_prop(index):
     return f"已锁定道具资产编号: {index}"
 
 def render_performance(micro, macro):
-    response = _post_to_engine('/api/v1/performance', {"micro_expression": micro, "macro_action": macro})
-    return response.get("video_url") if response else None
+    try:
+        response = _post_to_engine('/api/v1/performance', {"micro_expression": micro, "macro_action": macro})
+        return response.get("video_url")
+    except Exception as e:
+        print(f"Error in render_performance: {e}")
+        return None
 
 def synthesize_voice(text, emotion):
-    response = _post_to_engine('/api/v1/vocal', {"text": text, "emotion": emotion})
-    return response.get("audio_url") if response else None
+    try:
+        response = _post_to_engine('/api/v1/vocal', {"text": text, "emotion": emotion})
+        return response.get("audio_url")
+    except Exception as e:
+        print(f"Error in synthesize_voice: {e}")
+        return None
 
 def assemble_final():
     return None
