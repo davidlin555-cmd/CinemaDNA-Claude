@@ -20,6 +20,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from typing import Any
 
@@ -218,6 +219,33 @@ def create_app(workspace: FactoryWorkspace | None = None) -> FastAPI:
     def assets(kind: str) -> dict[str, Any]:
         rows = svc.assets(kind)
         return {"kind": kind, "count": len(rows), "items": rows}
+
+    @app.post("/api/v1/identity")
+    async def mock_identity_generation(request: Request) -> dict[str, Any]:
+        """Mock debugging endpoint for generating identity assets.
+
+        Simulates processing time and returns a mock success response with
+        a placeholder image URL for the frontend dashboard.
+        """
+        # Read the request body to ensure it's valid JSON (optional, but good practice)
+        try:
+            await request.json()
+        except Exception:
+            pass
+
+        # Simulate 2 seconds of thinking/generation time
+        await asyncio.sleep(2)
+
+        # Return a mock successful response with a placeholder image
+        return {
+            "status": "success",
+            "message": "Identity asset successfully generated (Mock)",
+            "data": {
+                "image_url": "https://via.placeholder.com/300x400.png?text=Mock+Identity",
+                "asset_id": "mock-identity-123",
+                "attributes": "Mock attributes based on request"
+            }
+        }
 
     # -- 工单 -------------------------------------------------------------
 
