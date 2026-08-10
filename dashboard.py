@@ -1,7 +1,11 @@
 import gradio as gr
 import pandas as pd
 import requests
+import traceback
+from dotenv import load_dotenv
 from cinemadna.scriptbrain.micro_dismantler import ScriptBrainMicroDismantler
+
+load_dotenv()
 
 # Backend API Helper
 def _post_to_engine(endpoint, payload):
@@ -19,12 +23,9 @@ def parse_script(file, outline, canvas, style, ratio):
         # Call the actual backend dismantler logic
         result = dismantler.dismantle(script_data)
 
-        if not result:
-            raise ValueError("LLM returned empty or null result.")
-
         # Ensure result is a list for iteration
         if not isinstance(result, list):
-            result = [result]
+            result = [result] if result else []
 
         markdown_str = ""
         current_scene = None
@@ -57,6 +58,7 @@ def parse_script(file, outline, canvas, style, ratio):
         return markdown_str, df
 
     except Exception as e:
+        traceback.print_exc()
         error_md = f"### ❌ 解析失败 (Parsing Failed)\n**Error Details:** {str(e)}"
         empty_df = pd.DataFrame(columns=[
             "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
