@@ -15,10 +15,20 @@ def _post_to_engine(endpoint, payload):
     return response.json()
 
 # Real Backend Integrations
-def parse_script(file, outline, canvas, style, ratio):
-    actual_script = outline or canvas or (file.name if file else "")
+def parse_script(file, outline, canvas, style, ratio, progress=gr.Progress()):
+    progress(0.1, desc="Reading inputs...")
+    file_content = ""
+    if file:
+        try:
+            with open(file.name, "r", encoding="utf-8") as f:
+                file_content = f.read()
+        except Exception as e:
+            raise gr.Error(f"Failed to read file: {e}")
+
+    actual_script = outline or canvas or file_content
     print("========== 收到前端解析请求 ==========")
     print(f"收到剧本大纲: {actual_script}")
+    progress(0.3, desc="Dismantling script using ScriptBrain AI...")
     try:
         dismantler = ScriptBrainMicroDismantler()
         script_data = {"outline": actual_script, "style": style, "ratio": ratio}
@@ -62,63 +72,88 @@ def parse_script(file, outline, canvas, style, ratio):
 
     except Exception as e:
         traceback.print_exc()
-        error_md = f"### ❌ 解析失败 (Parsing Failed)\n**Error Details:** {str(e)}"
-        empty_df = pd.DataFrame(columns=[
-            "镜号", "Camera_Lighting", "SceneDNA", "IdentityDNA", "PerformanceDNA", "PropDNA", "VocalDNA"
-        ])
-        return error_md, empty_df
+        raise gr.Error(str(e))
 
-def generate_identity(attributes, batch_size):
+def generate_identity(attributes, batch_size, progress=gr.Progress()):
+    progress(0.2, desc="Generating identity assets...")
     try:
         response = _post_to_engine('/api/v1/identity', {"attributes": attributes, "batch_size": batch_size})
         return response.get("images", [])
     except Exception as e:
-        print(f"Error in generate_identity: {e}")
-        return []
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def generate_scene(attributes, batch_size):
+def generate_scene(attributes, batch_size, progress=gr.Progress()):
+    progress(0.2, desc="Generating scene assets...")
     try:
         response = _post_to_engine('/api/v1/scene', {"attributes": attributes, "batch_size": batch_size})
         return response.get("images", [])
     except Exception as e:
-        print(f"Error in generate_scene: {e}")
-        return []
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def generate_prop(attributes, batch_size):
+def generate_prop(attributes, batch_size, progress=gr.Progress()):
+    progress(0.2, desc="Generating prop assets...")
     try:
         response = _post_to_engine('/api/v1/prop', {"attributes": attributes, "batch_size": batch_size})
         return response.get("images", [])
     except Exception as e:
-        print(f"Error in generate_prop: {e}")
-        return []
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def lock_identity(index):
-    return f"已锁定身份资产编号: {index}"
+def lock_identity(index, progress=gr.Progress()):
+    progress(0.9, desc="Locking identity asset...")
+    try:
+        response = _post_to_engine('/api/v1/identity/lock', {"index": index})
+        return f"已锁定身份资产编号: {index}"
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def lock_scene(index):
-    return f"已锁定场景基准图编号: {index}"
+def lock_scene(index, progress=gr.Progress()):
+    progress(0.9, desc="Locking scene asset...")
+    try:
+        response = _post_to_engine('/api/v1/scene/lock', {"index": index})
+        return f"已锁定场景基准图编号: {index}"
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def lock_prop(index):
-    return f"已锁定道具资产编号: {index}"
+def lock_prop(index, progress=gr.Progress()):
+    progress(0.9, desc="Locking prop asset...")
+    try:
+        response = _post_to_engine('/api/v1/prop/lock', {"index": index})
+        return f"已锁定道具资产编号: {index}"
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def render_performance(micro, macro):
+def render_performance(micro, macro, progress=gr.Progress()):
+    progress(0.3, desc="Rendering performance video...")
     try:
         response = _post_to_engine('/api/v1/performance', {"micro_expression": micro, "macro_action": macro})
         return response.get("video_url")
     except Exception as e:
-        print(f"Error in render_performance: {e}")
-        return None
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def synthesize_voice(text, emotion):
+def synthesize_voice(text, emotion, progress=gr.Progress()):
+    progress(0.4, desc="Synthesizing voice audio...")
     try:
         response = _post_to_engine('/api/v1/vocal', {"text": text, "emotion": emotion})
         return response.get("audio_url")
     except Exception as e:
-        print(f"Error in synthesize_voice: {e}")
-        return None
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
-def assemble_final():
-    return None
+def assemble_final(progress=gr.Progress()):
+    progress(0.5, desc="Assembling final cut...")
+    try:
+        response = _post_to_engine('/api/v1/assemble', {})
+        return response.get("final_video_url")
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(str(e))
 
 with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
     gr.Markdown("# DramaOS 导播台 (Director's Console)")
