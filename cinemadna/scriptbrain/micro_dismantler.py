@@ -37,6 +37,8 @@ Each object in the array represents one shot and MUST contain EXACTLY the follow
 6. "PropDNA": (string) Any props in the scene, e.g., "Briefcase"
 7. "VocalDNA": (string) Dialogue for this specific shot, or empty string.
 
+You MUST output the final dismantled result in exactly the SAME language as the user's original script input (e.g., if the user inputs Simplified Chinese, you must output entirely in Simplified Chinese).
+
 Ensure your output is strictly a JSON array parsing the story logically.
 """
 

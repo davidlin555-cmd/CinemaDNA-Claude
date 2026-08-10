@@ -16,11 +16,12 @@ def _post_to_engine(endpoint, payload):
 
 # Real Backend Integrations
 def parse_script(file, outline, canvas, style, ratio):
+    actual_script = outline or canvas or (file.name if file else "")
     print("========== 收到前端解析请求 ==========")
-    print(f"收到剧本大纲: {outline}")
+    print(f"收到剧本大纲: {actual_script}")
     try:
         dismantler = ScriptBrainMicroDismantler()
-        script_data = {"outline": outline, "style": style, "ratio": ratio}
+        script_data = {"outline": actual_script, "style": style, "ratio": ratio}
 
         # Call the actual backend dismantler logic
         result = dismantler.dismantle(script_data)
