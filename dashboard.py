@@ -129,8 +129,15 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
     with gr.Tabs():
         # Tab 1: 📝 剧本中枢 (ScriptBrain)
         with gr.Tab("📝 剧本中枢 (ScriptBrain)"):
-            with gr.Row():
-                script_outline = gr.Textbox(label="剧本大纲 (Script Outline)", placeholder="输入剧本大纲...", lines=5)
+            with gr.Group():
+                with gr.Tabs():
+                    with gr.Tab("上传剧本 (.docx/.txt)"):
+                        script_file = gr.File(label="上传本地剧本文件")
+                    with gr.Tab("AI 生剧本 (输入大纲)"):
+                        script_outline = gr.Textbox(label="剧本大纲 (Script Outline)", placeholder="输入剧本大纲...", lines=5)
+                    with gr.Tab("自由画布"):
+                        script_canvas = gr.Textbox(label="自由文本", placeholder="随意写下灵感...", lines=5)
+
             with gr.Row():
                 style_dropdown = gr.Dropdown(choices=["写实 (Realistic)", "3D", "动漫 (Anime)"], label="画风 (Style)")
             with gr.Row():
