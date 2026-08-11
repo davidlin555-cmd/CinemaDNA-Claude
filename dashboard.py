@@ -17,27 +17,43 @@ def _post_to_engine(endpoint: str, payload: dict) -> dict:
         raise gr.Error(f"Engine connection failed: {str(e)}")
 
 # Dummy functions for callbacks
-def parse_script(outline, style, progress=gr.Progress()):
+def parse_script(outline, style, aspect_ratio, episodes, progress=gr.Progress()):
     progress(0.2, desc="Parsing script...")
     try:
         result = _post_to_engine("/api/v1/script/parse", {"outline": outline, "style": style})
         shots = result.get("data", {}).get("shots", [])
 
-        # Build dataframe
-        df_data = []
-        for shot in shots:
-            df_data.append({
-                "镜号": shot.get("shot_id", ""),
-                "场景": shot.get("scene", ""),
-                "动作": shot.get("action", ""),
-                "角色": shot.get("character", ""),
-                "提示词": shot.get("prompt", "")
-            })
-        df = pd.DataFrame(df_data)
+        # Build Rich HTML Output replacing the DataFrame
+        # Grouping simulated shots into fake episodes to demonstrate accordion layout
+        ep_count = int(episodes.replace("集", "")) if episodes else 1
+        html_content = "<div style='font-family: sans-serif;'>"
+
+        for ep in range(1, ep_count + 1):
+            html_content += f"""
+            <details style="margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
+                <summary style="font-weight: bold; cursor: pointer; padding: 5px; background-color: #f9f9f9;">
+                    📺 第 {ep} 集：{style} 风格呈现 ({aspect_ratio})
+                </summary>
+                <div style="padding: 15px; margin-top: 10px;">
+            """
+            for idx, shot in enumerate(shots):
+                html_content += f"""
+                    <div style="margin-bottom: 20px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                        <h4 style="color: #2c3e50; margin: 0 0 5px 0;">🎬 【场景 {idx+1}】 {shot.get('scene', '未知场景')}</h4>
+                        <p style="margin: 0 0 5px 0;"><strong>🎥 【镜头 {shot.get('shot_id', '')}】</strong></p>
+                        <p style="margin: 0 0 5px 0; color: #555;"><strong>🏃‍♂️ 【动作描写】</strong> {shot.get('action', '')} ({shot.get('character', '')})</p>
+                        <p style="margin: 0 0 5px 0; font-style: italic; color: #34495e;"><strong>📝 【提示词】</strong> {shot.get('prompt', '')}</p>
+                    </div>
+                """
+            html_content += """
+                </div>
+            </details>
+            """
+        html_content += "</div>"
 
         gate_feedback = result.get("gate_feedback", "无反馈")
         progress(1.0, desc="Done")
-        return df, gate_feedback
+        return html_content, gate_feedback
     except Exception as e:
         traceback.print_exc()
         raise gr.Error(f"Failed to parse script: {e}")
@@ -135,20 +151,18 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                         script_file = gr.File(label="上传本地剧本文件")
                     with gr.Tab("AI 生剧本 (输入大纲)"):
                         script_outline = gr.Textbox(label="剧本大纲 (Script Outline)", placeholder="输入剧本大纲...", lines=5)
+                        with gr.Row():
+                            style_dropdown = gr.Dropdown(choices=["90年代写实", "复古叙事", "二次元", "3D 动画"], label="画风库 (Style)", value="90年代写实")
+                            aspect_dropdown = gr.Dropdown(choices=["9:16", "16:9"], label="画幅比例 (Aspect Ratio)", value="9:16")
+                            episode_dropdown = gr.Dropdown(choices=["1集", "5集", "10集", "15集"], label="预计集数 (Episodes)", value="1集")
                     with gr.Tab("自由画布"):
                         script_canvas = gr.Textbox(label="自由文本", placeholder="随意写下灵感...", lines=5)
 
             with gr.Row():
-                style_dropdown = gr.Dropdown(choices=["写实 (Realistic)", "3D", "动漫 (Anime)"], label="画风 (Style)")
+                parse_btn = gr.Button("🎬 解析与拆解剧本 (Parse and Dismantle Script)", variant="primary")
+
             with gr.Row():
-                parse_btn = gr.Button("解析与拆解剧本 (Parse and Dismantle Script)")
-            with gr.Row():
-                shot_list_df = gr.Dataframe(
-                    headers=["镜号", "场景", "动作", "角色", "提示词"],
-                    label="分镜单 (Shot List)",
-                    interactive=True,
-                    row_count=5
-                )
+                script_rich_output = gr.HTML(label="专业剧本分镜阅读区")
 
             with gr.Row():
                 script_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
@@ -156,7 +170,11 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                 script_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
                 script_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
 
-            parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=[shot_list_df, script_gate_feedback])
+            parse_btn.click(
+                fn=parse_script,
+                inputs=[script_outline, style_dropdown, aspect_dropdown, episode_dropdown],
+                outputs=[script_rich_output, script_gate_feedback]
+            )
             script_approve_btn.click(fn=pass_gate, outputs=script_gate_feedback)
             script_reject_btn.click(fn=reject_gate, outputs=script_gate_feedback)
 
