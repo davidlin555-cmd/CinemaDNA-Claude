@@ -224,58 +224,65 @@ def create_app(workspace: FactoryWorkspace | None = None) -> FastAPI:
     async def scene_generation(request: Request) -> dict[str, Any]:
         """Endpoint for generating scene layouts."""
         req_data = await request.json()
-        feedback = req_data.get("feedback", "")
 
-        import config
+        from asset_brain.scene_dna.agents import SceneDNA
         from asset_brain.scene_dna.gate import run_scene_gate
 
-        has_key = config.has("ANTHROPIC_API_KEY") or config.has("OPENAI_API_KEY")
+        try:
+            agent = SceneDNA()
+            asset = await agent.compose_layout_async(req_data)
 
-        asset = {"naturalness": 0.8, "script_match": 0.7, "layout_usability": 0.8, "rights_risk": 0.1}
-        if feedback:
-            asset["script_match"] = 0.95
+            gate_report = run_scene_gate(gate_id="scene_live", workorder_id="wo_live", generated_asset=asset, requirement={"must_be_natural": True})
 
-        gate_report = run_scene_gate(gate_id="scene_live", workorder_id="wo_live", generated_asset=asset, requirement={"must_be_natural": True})
-
-        return {
-            "status": "success",
-            "message": "Scene generated via API" if has_key else "Scene generated (No API Key Fallback)",
-            "gate_status": "approved" if gate_report.passed else "needs_review",
-            "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Scene Gate Passed: Layout aligns with script.",
-            "data": {
-                "image_url": "https://via.placeholder.com/600x400.png?text=Live+Scene",
-                "attributes": req_data.get("attributes", "")
+            return {
+                "status": "success",
+                "message": "Scene generated via Multimodal API",
+                "gate_status": "approved" if gate_report.passed else "needs_review",
+                "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Scene Gate Passed: Layout generated safely.",
+                "data": {
+                    "image_url": asset["image_url"],
+                    "attributes": req_data.get("attributes", "")
+                }
             }
-        }
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Scene Generation Error: {str(e)}")
 
     @app.post("/api/v1/identity")
     async def identity_generation(request: Request) -> dict[str, Any]:
         """Endpoint for generating identity assets via IdentityDNA."""
         req_data = await request.json()
 
-        import config
-        has_key = config.has("ANTHROPIC_API_KEY") or config.has("OPENAI_API_KEY")
-
+        from asset_brain.identity_dna.agents import IdentityDNA
         from asset_brain.identity_dna.gate import run_identity_gate
 
-        gate_report = run_identity_gate(
-            gate_id="id_gate_live",
-            workorder_id="wo_live",
-            identity_pack={"naturalness": 0.8, "ethnicity_match": 0.9, "family_consistency": 0.9, "is_real_image": True},
-            requirement={"must_multi_face_fusion": True, "forbid_single_real_clone": True}
-        )
+        try:
+            agent = IdentityDNA()
+            asset = await agent.generate_fusion_async(req_data)
 
-        return {
-            "status": "success",
-            "message": "Identity generated via API" if has_key else "Identity generated (No API Key Fallback)",
-            "gate_status": "approved" if gate_report.passed else "needs_review",
-            "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Identity Gate Passed: Naturalness and Rights Check OK.",
-            "data": {
-                "image_url": "https://via.placeholder.com/300x400.png?text=Live+Identity",
-                "asset_id": "live-identity-123",
-                "attributes": req_data.get("attributes", "")
+            gate_report = run_identity_gate(
+                gate_id="id_gate_live",
+                workorder_id="wo_live",
+                identity_pack=asset,
+                requirement={"must_multi_face_fusion": True, "forbid_single_real_clone": True}
+            )
+
+            return {
+                "status": "success",
+                "message": "Identity generated via Multimodal API",
+                "gate_status": "approved" if gate_report.passed else "needs_review",
+                "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Identity Gate Passed: Naturalness and Rights Check OK.",
+                "data": {
+                    "image_url": asset["image_url"],
+                    "asset_id": "live-identity-123",
+                    "attributes": req_data.get("attributes", "")
+                }
             }
-        }
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Identity Generation Error: {str(e)}")
 
     @app.post("/api/v1/script/parse")
     async def script_parsing(request: Request) -> dict[str, Any]:
@@ -333,49 +340,59 @@ def create_app(workspace: FactoryWorkspace | None = None) -> FastAPI:
     async def performance_generation(request: Request) -> dict[str, Any]:
         """Endpoint for generating performance/micro-expressions."""
         req_data = await request.json()
-        feedback = req_data.get("feedback", "")
+        prompt = req_data.get("prompt", "Default action")
 
+        from performance.agents import PerformanceDNA
         from performance.gate import run_performance_gate
 
-        asset = {"intent_match": 0.85, "expression_naturalness": 0.75, "beats": True}
-        if feedback:
-            asset["expression_naturalness"] = 0.90 # Improved on retry
+        try:
+            agent = PerformanceDNA()
+            asset = await agent.generate_performance_async(prompt)
 
-        gate_report = run_performance_gate(gate_id="perf_live", workorder_id="wo_live", performance_asset=asset)
+            gate_report = run_performance_gate(gate_id="perf_live", workorder_id="wo_live", performance_asset=asset)
 
-        return {
-            "status": "success",
-            "message": "Performance generated",
-            "gate_status": "approved" if gate_report.passed else "needs_review",
-            "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Performance Gate Passed: Actions align tightly with script intent.",
-            "data": {
-                "video_url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            return {
+                "status": "success",
+                "message": "Performance generated via API",
+                "gate_status": "approved" if gate_report.passed else "needs_review",
+                "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Performance Gate Passed.",
+                "data": {
+                    "video_url": asset["video_url"]
+                }
             }
-        }
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Performance Video Error: {str(e)}")
 
     @app.post("/api/v1/audio/synthesize")
     async def audio_synthesis(request: Request) -> dict[str, Any]:
         """Endpoint for generating voice/audio."""
         req_data = await request.json()
-        feedback = req_data.get("feedback", "")
+        dialogue = req_data.get("dialogue", "Test")
 
+        from audio.vocal_dna_agent import VocalDNA
         from audio.gate import run_audio_gate
 
-        asset = {"audio_clarity": 0.9, "emotion_match": 0.65, "has_dialogue": True, "lip_sync_markers": True}
-        if feedback:
-            asset["emotion_match"] = 0.95 # Improved on retry
+        try:
+            agent = VocalDNA()
+            asset = await agent.synthesize_voice_async(dialogue)
 
-        gate_report = run_audio_gate(gate_id="audio_live", workorder_id="wo_live", audio_asset=asset)
+            gate_report = run_audio_gate(gate_id="audio_live", workorder_id="wo_live", audio_asset=asset)
 
-        return {
-            "status": "success",
-            "message": "Audio synthesized",
-            "gate_status": "approved" if gate_report.passed else "needs_review",
-            "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Audio Gate Passed: Clarity and emotion match verified.",
-            "data": {
-                "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            return {
+                "status": "success",
+                "message": "Audio synthesized via API",
+                "gate_status": "approved" if gate_report.passed else "needs_review",
+                "gate_feedback": " | ".join(gate_report.issues) if gate_report.issues else "Audio Gate Passed.",
+                "data": {
+                    "audio_url": asset["audio_url"]
+                }
             }
-        }
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            raise HTTPException(status_code=500, detail=f"Audio Synthesis Error: {str(e)}")
 
     @app.post("/api/v1/assemble")
     async def assemble_final_video(request: Request) -> dict[str, Any]:
