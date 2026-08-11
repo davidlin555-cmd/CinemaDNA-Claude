@@ -19,41 +19,26 @@ def _post_to_engine(endpoint: str, payload: dict) -> dict:
         traceback.print_exc()
         raise gr.Error(f"Engine connection failed: {str(e)}")
 
-def parse_script(outline, style, aspect_ratio, episodes, progress=gr.Progress()):
+def parse_script(outline, style, aspect_ratio, episodes, feedback="", progress=gr.Progress()):
     progress(0.2, desc="Parsing script...")
     try:
-        result = _post_to_engine("/api/v1/script/parse", {"outline": outline, "style": style})
+        payload = {"outline": outline, "style": style}
+        if feedback:
+            payload["feedback"] = feedback
+
+        result = _post_to_engine("/api/v1/script/parse", payload)
         shots = result.get("data", {}).get("shots", [])
 
         ep_count = int(episodes.replace("集", "")) if episodes else 1
-        html_content = "<div style='font-family: sans-serif;'>"
 
+        # Structure data as a list of episodes, where each episode is a list of shots
+        episodes_data = []
         for ep in range(1, ep_count + 1):
-            html_content += f'''
-            <details style="margin-bottom: 10px; border: 1px solid #ddd; border-radius: 5px; padding: 5px;">
-                <summary style="font-weight: bold; cursor: pointer; padding: 5px; background-color: #f9f9f9;">
-                    📺 第 {ep} 集：{style} 风格呈现 ({aspect_ratio})
-                </summary>
-                <div style="padding: 15px; margin-top: 10px;">
-            '''
-            for idx, shot in enumerate(shots):
-                html_content += f'''
-                    <div style="margin-bottom: 20px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
-                        <h4 style="color: #2c3e50; margin: 0 0 5px 0;">🎬 【场景 {idx+1}】 {shot.get('scene', '未知场景')}</h4>
-                        <p style="margin: 0 0 5px 0;"><strong>🎥 【镜头 {shot.get('shot_id', '')}】</strong></p>
-                        <p style="margin: 0 0 5px 0; color: #555;"><strong>🏃‍♂️ 【动作描写】</strong> {shot.get('action', '')} ({shot.get('character', '')})</p>
-                        <p style="margin: 0 0 5px 0; font-style: italic; color: #34495e;"><strong>📝 【提示词】</strong> {shot.get('prompt', '')}</p>
-                    </div>
-                '''
-            html_content += """
-                </div>
-            </details>
-            """
-        html_content += "</div>"
+            episodes_data.append(shots) # Reusing the same shots for mocking episodes
 
         gate_feedback = result.get("gate_feedback", "无反馈")
         progress(1.0, desc="Done")
-        return html_content, gate_feedback
+        return episodes_data, gate_feedback
     except Exception as e:
         traceback.print_exc()
         raise gr.Error(f"Failed to parse script: {e}")
@@ -74,8 +59,8 @@ def generate_character(attributes, progress=gr.Progress()):
 def generate_scene(attributes, progress=gr.Progress()):
     progress(0.2, desc="Requesting Scene Generation...")
     try:
-        time.sleep(2)
-        image_url = "https://via.placeholder.com/600x400.png?text=Mock+Scene"
+        result = _post_to_engine("/api/v1/scene", {"attributes": attributes})
+        image_url = result.get("data", {}).get("image_url")
         progress(1.0, desc="Asset Received")
         if image_url:
             return [image_url]
@@ -87,10 +72,14 @@ def generate_scene(attributes, progress=gr.Progress()):
 def lock_assets():
     return None
 
-def render_shot(prompt, transition, progress=gr.Progress()):
+def render_shot(prompt, transition, feedback="", progress=gr.Progress()):
     progress(0.2, desc="Rendering Shot...")
     try:
-        result = _post_to_engine("/api/v1/performance/generate", {"prompt": prompt, "transition": transition})
+        payload = {"prompt": prompt, "transition": transition}
+        if feedback:
+            payload["feedback"] = feedback
+
+        result = _post_to_engine("/api/v1/performance/generate", payload)
         video_url = result.get("data", {}).get("video_url")
         gate_feedback = result.get("gate_feedback", "无反馈")
         progress(1.0, desc="Render Complete")
@@ -99,10 +88,14 @@ def render_shot(prompt, transition, progress=gr.Progress()):
         traceback.print_exc()
         raise gr.Error(f"Failed to render shot: {e}")
 
-def synthesize_audio(dialogue, progress=gr.Progress()):
+def synthesize_audio(dialogue, feedback="", progress=gr.Progress()):
     progress(0.2, desc="Synthesizing Audio...")
     try:
-        result = _post_to_engine("/api/v1/audio/synthesize", {"dialogue": dialogue})
+        payload = {"dialogue": dialogue}
+        if feedback:
+            payload["feedback"] = feedback
+
+        result = _post_to_engine("/api/v1/audio/synthesize", payload)
         audio_url = result.get("data", {}).get("audio_url")
         gate_feedback = result.get("gate_feedback", "无反馈")
         progress(1.0, desc="Audio Synthesized")
@@ -120,8 +113,8 @@ def reject_gate():
 def assemble_final(progress=gr.Progress()):
     progress(0.2, desc="Assembling Final Video...")
     try:
-        time.sleep(3)
-        video_url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        result = _post_to_engine("/api/v1/assemble", {})
+        video_url = result.get("data", {}).get("video_url")
         progress(1.0, desc="Assembly Complete")
         return video_url
     except Exception as e:
