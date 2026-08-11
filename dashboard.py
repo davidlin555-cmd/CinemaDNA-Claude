@@ -18,17 +18,29 @@ def _post_to_engine(endpoint: str, payload: dict) -> dict:
 
 # Dummy functions for callbacks
 def parse_script(outline, style, progress=gr.Progress()):
-    progress(0.5, desc="Parsing script...")
-    # Simulated structure returned by ScriptBrain
-    df = pd.DataFrame({
-        "镜号": ["1", "2"],
-        "场景": ["街头", "室内"],
-        "动作": ["走动", "坐下"],
-        "角色": ["主角", "配角"],
-        "提示词": ["A person walking on the street", "Someone sitting in a room"]
-    })
-    progress(1.0, desc="Done")
-    return df
+    progress(0.2, desc="Parsing script...")
+    try:
+        result = _post_to_engine("/api/v1/script/parse", {"outline": outline, "style": style})
+        shots = result.get("data", {}).get("shots", [])
+
+        # Build dataframe
+        df_data = []
+        for shot in shots:
+            df_data.append({
+                "镜号": shot.get("shot_id", ""),
+                "场景": shot.get("scene", ""),
+                "动作": shot.get("action", ""),
+                "角色": shot.get("character", ""),
+                "提示词": shot.get("prompt", "")
+            })
+        df = pd.DataFrame(df_data)
+
+        gate_feedback = result.get("gate_feedback", "无反馈")
+        progress(1.0, desc="Done")
+        return df, gate_feedback
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to parse script: {e}")
 
 def generate_character(attributes, progress=gr.Progress()):
     progress(0.2, desc="Requesting Identity Generation...")
@@ -68,18 +80,32 @@ def lock_assets():
 def render_shot(prompt, transition, progress=gr.Progress()):
     progress(0.2, desc="Rendering Shot...")
     try:
-        # Simulate video rendering API call
-        # result = _post_to_engine("/api/v1/render", {"prompt": prompt, "transition": transition})
-        # video_url = result.get("data", {}).get("video_url")
-        import time
-        time.sleep(2)
-        # Using a public sample video URL for demonstration purposes
-        video_url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+        result = _post_to_engine("/api/v1/performance/generate", {"prompt": prompt, "transition": transition})
+        video_url = result.get("data", {}).get("video_url")
+        gate_feedback = result.get("gate_feedback", "无反馈")
         progress(1.0, desc="Render Complete")
-        return video_url # gr.Video expects a string URL or local path
+        return video_url, gate_feedback
     except Exception as e:
         traceback.print_exc()
         raise gr.Error(f"Failed to render shot: {e}")
+
+def synthesize_audio(dialogue, progress=gr.Progress()):
+    progress(0.2, desc="Synthesizing Audio...")
+    try:
+        result = _post_to_engine("/api/v1/audio/synthesize", {"dialogue": dialogue})
+        audio_url = result.get("data", {}).get("audio_url")
+        gate_feedback = result.get("gate_feedback", "无反馈")
+        progress(1.0, desc="Audio Synthesized")
+        return audio_url, gate_feedback
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to synthesize audio: {e}")
+
+def pass_gate():
+    return "已审核通过，已锁定"
+
+def reject_gate():
+    return "已打回，请根据意见修改重试"
 
 def assemble_final(progress=gr.Progress()):
     progress(0.2, desc="Assembling Final Video...")
@@ -117,7 +143,15 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                     row_count=5
                 )
 
-            parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=shot_list_df)
+            with gr.Row():
+                script_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
+            with gr.Row():
+                script_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
+                script_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
+
+            parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=[shot_list_df, script_gate_feedback])
+            script_approve_btn.click(fn=pass_gate, outputs=script_gate_feedback)
+            script_reject_btn.click(fn=reject_gate, outputs=script_gate_feedback)
 
         # Tab 2: 🗃️ 资产工坊 (The DNA Forge)
         with gr.Tab("🗃️ 资产工坊 (The DNA Forge)"):
@@ -159,9 +193,35 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                 with gr.Column():
                     shot_video = gr.Video(label="当前分镜片段 (Current Shot Video)")
 
-            render_btn.click(fn=render_shot, inputs=[shot_prompt, transition_checkbox], outputs=shot_video)
+            with gr.Row():
+                perf_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
+            with gr.Row():
+                perf_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
+                perf_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
 
-        # Tab 4: 🎞️ 终极剪辑室 (Final Assembly)
+            render_btn.click(fn=render_shot, inputs=[shot_prompt, transition_checkbox], outputs=[shot_video, perf_gate_feedback])
+            perf_approve_btn.click(fn=pass_gate, outputs=perf_gate_feedback)
+            perf_reject_btn.click(fn=reject_gate, outputs=perf_gate_feedback)
+
+        # Tab 4: 🎙️ 声音车间 (Vocal Workshop)
+        with gr.Tab("🎙️ 声音车间 (Vocal Workshop)"):
+            with gr.Row():
+                dialogue_input = gr.Textbox(label="台词 (Dialogue)", placeholder="输入要合成的台词...")
+                synth_btn = gr.Button("合成音频 (Synthesize Audio)")
+            with gr.Row():
+                audio_out = gr.Audio(label="合成结果 (Synthesized Audio)")
+
+            with gr.Row():
+                vocal_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
+            with gr.Row():
+                vocal_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
+                vocal_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
+
+            synth_btn.click(fn=synthesize_audio, inputs=[dialogue_input], outputs=[audio_out, vocal_gate_feedback])
+            vocal_approve_btn.click(fn=pass_gate, outputs=vocal_gate_feedback)
+            vocal_reject_btn.click(fn=reject_gate, outputs=vocal_gate_feedback)
+
+        # Tab 5: 🎞️ 终极剪辑室 (Final Assembly)
         with gr.Tab("🎞️ 终极剪辑室 (Final Assembly)"):
             with gr.Row():
                 assemble_btn = gr.Button("一键合成最终成片 (One-Click Assemble Final Video)")
