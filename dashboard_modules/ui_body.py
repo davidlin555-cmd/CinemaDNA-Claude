@@ -20,21 +20,45 @@ def render_script_body():
             for ep_index, ep_shots in enumerate(episodes_data):
                 with gr.Accordion(label=f"📺 第 {ep_index + 1} 集 分镜表", open=(ep_index == 0)):
                     for idx, shot in enumerate(ep_shots):
+                        subsystem = shot.get("subsystem_tasks", {})
+                        identity = subsystem.get("1_identity_dna", {})
+                        scene = subsystem.get("2_scene_dna", {})
+                        performance = subsystem.get("3_performance_dna", {})
+                        vocal = subsystem.get("4_vocal_dna", {})
+                        audio = subsystem.get("5_audio_dna", {})
+
                         markdown_content = f"""
-### 🎬 【场景 {idx+1}】
-{shot.get('scene', '未知场景')}
+### 🎬 【镜头 {shot.get('shot_id', idx+1)}】
 
-**🎥 【镜头 {shot.get('shot_id', '')}】 ({shot.get('camera', '未指定')})**
-*主体角色: {shot.get('character', '无')}*
+**【场景环境】**
+{shot.get('scene_setting', '未知')}
 
-*   **🏃‍♂️ 【动作描写】**
-    {shot.get('action', '')}
+**【画面与动作描写】**
+{shot.get('narrative_action', '未知')}
 
-*   **🗣️ 【台词与情绪】**
-    {shot.get('dialogue', '')}
+**👤 Identity DNA**
+*   **角色名:** {identity.get('character_name', '未指定')}
+*   **外观服装:** {identity.get('appearance_and_clothing', '未指定')}
+*   **面部微表情:** {identity.get('facial_micro_expression', '未指定')}
 
-*   **📝 【英文提示词 Prompt】**
-    *{shot.get('prompt', '')}*
+**🖼️ Scene DNA**
+*   **地点细节:** {scene.get('location_details', '未指定')}
+*   **电影灯光:** {scene.get('cinematic_lighting', '未指定')}
+
+**🎬 Performance DNA**
+*   **摄影机运动:** {performance.get('camera_work', '未指定')}
+*   **主体物理动作:** {performance.get('subject_physics', '未指定')}
+
+**🎙️ Vocal DNA**
+*   **台词文本:** {vocal.get('dialogue_text', 'None')}
+*   **情感标签:** {vocal.get('vocal_emotion_tags', '未指定')}
+
+**🎵 Audio DNA**
+*   **拟音音效:** {audio.get('foley_sfx', '未指定')}
+*   **背景音乐氛围:** {audio.get('bgm_mood', '未指定')}
+
+**📝 【Midjourney 提示词】**
+*{shot.get('midjourney_prompt', '未指定')}*
                         """
                         gr.Markdown(markdown_content)
 

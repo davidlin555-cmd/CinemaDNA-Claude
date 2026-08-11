@@ -18,18 +18,38 @@ _SYSTEM_PROMPT = """
 【绝对规则】：
 1. 你必须、且只能返回一个合法的 JSON 数组结构。
 2. 绝对不允许输出任何 Markdown 代码块标记（例如 ```json），不要输出任何解释性前言或后记。
-3. 你的输出必须完全匹配以下 JSON 格式。
+3. 你的输出必须完全匹配以下 JSON 格式。DramaOS 运行在严格定义的 5 大子模型架构上，ScriptBrain 必须为所有 5 个下游 DNA 引擎生成极其具体、独立的技术任务单。
 
-【输出格式要求】：
+【五大车间分镜任务单铁律 (输出格式要求)】：
 [
   {
-    "shot_id": "镜号，例如 '1', '2', '3'",
-    "scene": "【场景环境 (Scene Setting)】：必须包含极具画面感的具体地点、物理细节与光影氛围（不得低于30字）。",
-    "camera": "【镜头景别 (Camera Angle)】：强制明确（远景/全景/中景/近景/特写）。",
-    "action": "【画面与动作描写 (Visual & Action Description)】：绝对铁律！绝对不能低于 50 个字。必须极其详细地描述物理动作、脸部微表情、互动道具和环境动态反馈。禁止出现类似『走动』这种干瘪词汇。",
-    "dialogue": "【台词与情绪】：清晰标注角色名与括号内的前置情绪。",
-    "character": "画面主体角色，例如 '男主 李雷', '反派 赵四'",
-    "prompt": "【英文提示词 (Prompt)】：强制将上述中文细节，扩写为包含摄像机参数、光线追踪、画面质感（如 8k, cinematic lighting）的专业英文生图 Prompt。"
+    "shot_id": 1,
+    "scene_setting": "【场景环境 (Scene Setting)】：必须包含极具画面感的具体地点、物理细节与光影氛围（不得低于30字）。",
+    "narrative_action": "【画面与动作描写 (Visual & Action Description)】：绝对铁律！绝对不能低于 50 个字。必须极其详细地描述物理动作、脸部微表情、互动道具和环境动态反馈。禁止出现类似『走动』这种干瘪词汇。",
+    "subsystem_tasks": {
+      "1_identity_dna": {
+        "character_name": "画面聚焦的主体角色",
+        "appearance_and_clothing": "具体的服装、发型和造型",
+        "facial_micro_expression": "例如：瞳孔放大、嘴唇颤抖、冷笑"
+      },
+      "2_scene_dna": {
+        "location_details": "建筑、道具、背景元素",
+        "cinematic_lighting": "例如：体积光、赛博朋克霓虹灯、硬阴影"
+      },
+      "3_performance_dna": {
+        "camera_work": "例如：极特写、推镜头、手持摇晃",
+        "subject_physics": "例如：角色猛然转头、雨水溅在肩膀上"
+      },
+      "4_vocal_dna": {
+        "dialogue_text": "确切的台词文本或 'None'",
+        "vocal_emotion_tags": "例如：气喘吁吁、愤怒的耳语、哭泣"
+      },
+      "5_audio_dna": {
+        "foley_sfx": "例如：湿砾石上的脚步声、远处的雷声",
+        "bgm_mood": "例如：紧张的弦乐渐强、忧郁的钢琴"
+      }
+    },
+    "midjourney_prompt": "结合 Identity + Scene + Lighting + 8k, masterpiece 的英文翻译"
   }
 ]
 
@@ -92,8 +112,13 @@ class ScriptBrainMicroDismantler:
                 if not isinstance(shots, list):
                     raise ValueError("The parsed JSON is not a list.")
                 for idx, shot in enumerate(shots):
-                    if not all(k in shot for k in ("shot_id", "scene", "camera", "action", "dialogue", "character", "prompt")):
-                        raise ValueError(f"Shot at index {idx} is missing required schema keys.")
+                    required_keys = ("shot_id", "scene_setting", "narrative_action", "subsystem_tasks", "midjourney_prompt")
+                    if not all(k in shot for k in required_keys):
+                        raise ValueError(f"Shot at index {idx} is missing required schema keys: {required_keys}")
+
+                    subsystem_keys = ("1_identity_dna", "2_scene_dna", "3_performance_dna", "4_vocal_dna", "5_audio_dna")
+                    if not isinstance(shot.get("subsystem_tasks"), dict) or not all(k in shot["subsystem_tasks"] for k in subsystem_keys):
+                        raise ValueError(f"Shot at index {idx} subsystem_tasks is missing required keys: {subsystem_keys}")
 
                 return shots
 
