@@ -22,20 +22,22 @@ from .ui_footer import create_gatekeeper_ui
 def render_scriptbrain_tab():
     with gr.Tab("📝 剧本中枢 (ScriptBrain)"):
         with gr.Row():
-            # Left Panel: Controls
+            # Left Panel: Controls (scale=1)
             with gr.Column(scale=1):
                 script_outline, style_dropdown, aspect_dropdown, episode_dropdown = render_scriptbrain_header()
-                # Ensure the Generate button is massive and sits at the bottom of the left column
-                parse_btn = gr.Button("🎬 解析与拆解剧本 (Parse and Dismantle Script)", variant="primary", size="lg")
 
-            # Right Panel: Output Canvas
+                # Massive 'Generate' button mapped at the very bottom of the Left Control panel
+                parse_btn = gr.Button("🎬 解析与拆解剧本\n(Parse and Dismantle Script)", variant="primary", size="lg")
+
+            # Right Panel: Output Canvas (scale=3)
             with gr.Column(scale=3):
+                # The @gr.render logic for the gr.Accordion is exclusively rendered here
                 script_rich_output = render_script_body()
 
-        # Floating Footer: Gatekeeper components
+        # Floating Footer: Gatekeeper Textbox and Approve/Reject buttons below the main Row.
         gate_feedback, approve_btn, reject_btn = create_gatekeeper_ui()
 
-        # Wire callbacks
+        # Wire the Left-Panel Generate button to populate the Right-Panel Canvas
         parse_btn.click(
             fn=parse_script,
             inputs=[script_outline, style_dropdown, aspect_dropdown, episode_dropdown],
