@@ -1,33 +1,127 @@
 import gradio as gr
 import pandas as pd
+import requests
+import traceback
+
+# Engine endpoint URL
+ENGINE_URL = "http://127.0.0.1:8700"
+
+def _post_to_engine(endpoint: str, payload: dict) -> dict:
+    """Utility to post data to the local acting engine API."""
+    try:
+        response = requests.post(f"{ENGINE_URL}{endpoint}", json=payload)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Engine connection failed: {str(e)}")
 
 # Dummy functions for callbacks
-def parse_script(outline, style):
-    # Dummy dataframe data
-    df = pd.DataFrame({
-        "镜号": ["1", "2"],
-        "场景": ["街头", "室内"],
-        "动作": ["走动", "坐下"],
-        "角色": ["主角", "配角"],
-        "提示词": ["A person walking on the street", "Someone sitting in a room"]
-    })
-    return df
+def parse_script(outline, style, progress=gr.Progress()):
+    progress(0.2, desc="Parsing script...")
+    try:
+        result = _post_to_engine("/api/v1/script/parse", {"outline": outline, "style": style})
+        shots = result.get("data", {}).get("shots", [])
 
-def generate_character(attributes):
-    # Dummy gallery output (empty list of images)
-    return []
+        # Build dataframe
+        df_data = []
+        for shot in shots:
+            df_data.append({
+                "镜号": shot.get("shot_id", ""),
+                "场景": shot.get("scene", ""),
+                "动作": shot.get("action", ""),
+                "角色": shot.get("character", ""),
+                "提示词": shot.get("prompt", "")
+            })
+        df = pd.DataFrame(df_data)
 
-def generate_scene(attributes):
-    return []
+        gate_feedback = result.get("gate_feedback", "无反馈")
+        progress(1.0, desc="Done")
+        return df, gate_feedback
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to parse script: {e}")
+
+def generate_character(attributes, progress=gr.Progress()):
+    progress(0.2, desc="Requesting Identity Generation...")
+    try:
+        # Call the injected mock API
+        result = _post_to_engine("/api/v1/identity", {"attributes": attributes})
+        image_url = result.get("data", {}).get("image_url")
+        progress(1.0, desc="Asset Received")
+        if image_url:
+            return [image_url]  # gr.Gallery strictly expects a list of URLs/paths
+        return []
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to generate character: {e}")
+
+def generate_scene(attributes, progress=gr.Progress()):
+    progress(0.2, desc="Requesting Scene Generation...")
+    try:
+        # Assuming the orchestrator eventually implements /api/v1/scene
+        # For now, simulate the request.
+        # result = _post_to_engine("/api/v1/scene", {"attributes": attributes})
+        # image_url = result.get("data", {}).get("image_url")
+        import time
+        time.sleep(2)
+        image_url = "https://via.placeholder.com/600x400.png?text=Mock+Scene"
+        progress(1.0, desc="Asset Received")
+        if image_url:
+            return [image_url]
+        return []
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to generate scene: {e}")
 
 def lock_assets():
     return None
 
-def render_shot(prompt, transition):
-    return None # Return dummy video path if possible, or None
+def render_shot(prompt, transition, progress=gr.Progress()):
+    progress(0.2, desc="Rendering Shot...")
+    try:
+        result = _post_to_engine("/api/v1/performance/generate", {"prompt": prompt, "transition": transition})
+        video_url = result.get("data", {}).get("video_url")
+        gate_feedback = result.get("gate_feedback", "无反馈")
+        progress(1.0, desc="Render Complete")
+        return video_url, gate_feedback
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to render shot: {e}")
 
-def assemble_final():
-    return None
+def synthesize_audio(dialogue, progress=gr.Progress()):
+    progress(0.2, desc="Synthesizing Audio...")
+    try:
+        result = _post_to_engine("/api/v1/audio/synthesize", {"dialogue": dialogue})
+        audio_url = result.get("data", {}).get("audio_url")
+        gate_feedback = result.get("gate_feedback", "无反馈")
+        progress(1.0, desc="Audio Synthesized")
+        return audio_url, gate_feedback
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to synthesize audio: {e}")
+
+def pass_gate():
+    return "已审核通过，已锁定"
+
+def reject_gate():
+    return "已打回，请根据意见修改重试"
+
+def assemble_final(progress=gr.Progress()):
+    progress(0.2, desc="Assembling Final Video...")
+    try:
+        # Simulate final assembly API call
+        # result = _post_to_engine("/api/v1/assemble", {})
+        # video_url = result.get("data", {}).get("video_url")
+        import time
+        time.sleep(3)
+        # Using a public sample video URL for demonstration purposes
+        video_url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        progress(1.0, desc="Assembly Complete")
+        return video_url # gr.Video expects a string URL or local path
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to assemble final video: {e}")
 
 with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
     gr.Markdown("# DramaOS 导播台 (Director's Console)")
@@ -49,7 +143,15 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                     row_count=5
                 )
 
-            parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=shot_list_df)
+            with gr.Row():
+                script_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
+            with gr.Row():
+                script_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
+                script_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
+
+            parse_btn.click(fn=parse_script, inputs=[script_outline, style_dropdown], outputs=[shot_list_df, script_gate_feedback])
+            script_approve_btn.click(fn=pass_gate, outputs=script_gate_feedback)
+            script_reject_btn.click(fn=reject_gate, outputs=script_gate_feedback)
 
         # Tab 2: 🗃️ 资产工坊 (The DNA Forge)
         with gr.Tab("🗃️ 资产工坊 (The DNA Forge)"):
@@ -91,9 +193,35 @@ with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
                 with gr.Column():
                     shot_video = gr.Video(label="当前分镜片段 (Current Shot Video)")
 
-            render_btn.click(fn=render_shot, inputs=[shot_prompt, transition_checkbox], outputs=shot_video)
+            with gr.Row():
+                perf_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
+            with gr.Row():
+                perf_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
+                perf_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
 
-        # Tab 4: 🎞️ 终极剪辑室 (Final Assembly)
+            render_btn.click(fn=render_shot, inputs=[shot_prompt, transition_checkbox], outputs=[shot_video, perf_gate_feedback])
+            perf_approve_btn.click(fn=pass_gate, outputs=perf_gate_feedback)
+            perf_reject_btn.click(fn=reject_gate, outputs=perf_gate_feedback)
+
+        # Tab 4: 🎙️ 声音车间 (Vocal Workshop)
+        with gr.Tab("🎙️ 声音车间 (Vocal Workshop)"):
+            with gr.Row():
+                dialogue_input = gr.Textbox(label="台词 (Dialogue)", placeholder="输入要合成的台词...")
+                synth_btn = gr.Button("合成音频 (Synthesize Audio)")
+            with gr.Row():
+                audio_out = gr.Audio(label="合成结果 (Synthesized Audio)")
+
+            with gr.Row():
+                vocal_gate_feedback = gr.Textbox(label="🤖 Agent 质检报告 (Gatekeeper Feedback)", interactive=False)
+            with gr.Row():
+                vocal_approve_btn = gr.Button("✅ 审核通过并锁定 (Approve & Lock)")
+                vocal_reject_btn = gr.Button("🔄 附带意见打回重做 (Reject & Regenerate)")
+
+            synth_btn.click(fn=synthesize_audio, inputs=[dialogue_input], outputs=[audio_out, vocal_gate_feedback])
+            vocal_approve_btn.click(fn=pass_gate, outputs=vocal_gate_feedback)
+            vocal_reject_btn.click(fn=reject_gate, outputs=vocal_gate_feedback)
+
+        # Tab 5: 🎞️ 终极剪辑室 (Final Assembly)
         with gr.Tab("🎞️ 终极剪辑室 (Final Assembly)"):
             with gr.Row():
                 assemble_btn = gr.Button("一键合成最终成片 (One-Click Assemble Final Video)")

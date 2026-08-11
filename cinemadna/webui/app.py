@@ -20,6 +20,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from typing import Any
 
@@ -218,6 +219,80 @@ def create_app(workspace: FactoryWorkspace | None = None) -> FastAPI:
     def assets(kind: str) -> dict[str, Any]:
         rows = svc.assets(kind)
         return {"kind": kind, "count": len(rows), "items": rows}
+
+    @app.post("/api/v1/identity")
+    async def mock_identity_generation(request: Request) -> dict[str, Any]:
+        """Mock debugging endpoint for generating identity assets.
+
+        Simulates processing time and returns a mock success response with
+        a placeholder image URL for the frontend dashboard.
+        """
+        # Read the request body to ensure it's valid JSON (optional, but good practice)
+        try:
+            await request.json()
+        except Exception:
+            pass
+
+        # Simulate 2 seconds of thinking/generation time
+        await asyncio.sleep(2)
+
+        # Return a mock successful response with a placeholder image
+        return {
+            "status": "success",
+            "message": "Identity asset successfully generated (Mock)",
+            "gate_status": "needs_review",
+            "gate_feedback": "肖像权审查通过，但表情略显僵硬，建议人工复核自然度。",
+            "data": {
+                "image_url": "https://via.placeholder.com/300x400.png?text=Mock+Identity",
+                "asset_id": "mock-identity-123",
+                "attributes": "Mock attributes based on request"
+            }
+        }
+
+    @app.post("/api/v1/script/parse")
+    async def mock_script_parsing(request: Request) -> dict[str, Any]:
+        """Mock endpoint for parsing a script outline into a shot list."""
+        await asyncio.sleep(1)
+        return {
+            "status": "success",
+            "message": "Script successfully parsed",
+            "gate_status": "needs_review",
+            "gate_feedback": "分镜 1 的动作描述缺失，分镜 2 的场景不连贯，已自动补全，请确认。",
+            "data": {
+                "shots": [
+                    {"shot_id": "1", "scene": "街头", "action": "走动", "character": "主角", "prompt": "A person walking on the street"},
+                    {"shot_id": "2", "scene": "室内", "action": "坐下", "character": "配角", "prompt": "Someone sitting in a room"}
+                ]
+            }
+        }
+
+    @app.post("/api/v1/performance/generate")
+    async def mock_performance_generation(request: Request) -> dict[str, Any]:
+        """Mock endpoint for generating performance/micro-expressions."""
+        await asyncio.sleep(2)
+        return {
+            "status": "success",
+            "message": "Performance generated",
+            "gate_status": "needs_review",
+            "gate_feedback": "微表情过于夸张，建议调低参数。",
+            "data": {
+                "video_url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+            }
+        }
+
+    @app.post("/api/v1/audio/synthesize")
+    async def mock_audio_synthesis(request: Request) -> dict[str, Any]:
+        """Mock endpoint for generating voice/audio."""
+        await asyncio.sleep(1)
+        return {
+            "status": "success",
+            "message": "Audio synthesized",
+            "gate_status": "needs_review",
+            "gate_feedback": "存在轻微吞字现象，情感匹配度 85%，建议重试或人工介入。",
+            "data": {
+                "audio_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            }
+        }
 
     # -- 工单 -------------------------------------------------------------
 
