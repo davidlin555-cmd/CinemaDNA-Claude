@@ -28,10 +28,18 @@ def run_script_gate(
         for i, shot in enumerate(script_output["shots"]):
             if not shot.get("shot_id"):
                 issues.append(f"Shot at index {i} is missing 'shot_id'.")
-            if not shot.get("scene"):
+
+            scene_desc = shot.get("scene", "")
+            if not scene_desc:
                 issues.append(f"Shot at index {i} is missing 'scene' definition.")
-            if not shot.get("action"):
+            elif len(scene_desc) < 30:
+                issues.append(f"Shot {shot.get('shot_id', i)} 场景描述不足 30 字，缺乏画面细节。")
+
+            action_desc = shot.get("action", "")
+            if not action_desc:
                 issues.append(f"Shot at index {i} is missing 'action' definition.")
+            elif len(action_desc) < 50:
+                issues.append(f"Shot {shot.get('shot_id', i)} 动作描述不足 50 字，微表情与物理动作描写干瘪。")
 
     passed = not issues
 

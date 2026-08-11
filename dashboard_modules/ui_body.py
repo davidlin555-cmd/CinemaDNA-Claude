@@ -21,11 +21,20 @@ def render_script_body():
             with gr.Accordion(label=f"📺 第 {ep_index + 1} 集", open=(ep_index == 0)):
                 for idx, shot in enumerate(ep_shots):
                     markdown_content = f"""
-### 🎬 【场景 {idx+1}】 {shot.get('scene', '未知场景')}
-**🎥 【镜头 {shot.get('shot_id', '')}】**
+### 🎬 【场景 {idx+1}】
+{shot.get('scene', '未知场景')}
 
-*   **🏃‍♂️ 【动作描写】** {shot.get('action', '')} ({shot.get('character', '')})
-*   **📝 【提示词】** *{shot.get('prompt', '')}*
+**🎥 【镜头 {shot.get('shot_id', '')}】 ({shot.get('camera', '未指定')})**
+*主体角色: {shot.get('character', '无')}*
+
+*   **🏃‍♂️ 【动作描写】**
+    {shot.get('action', '')}
+
+*   **🗣️ 【台词与情绪】**
+    {shot.get('dialogue', '')}
+
+*   **📝 【英文提示词 Prompt】**
+    *{shot.get('prompt', '')}*
                     """
                     gr.Markdown(markdown_content)
 

@@ -13,7 +13,7 @@ import anthropic
 import cinemadna.config as config
 
 _SYSTEM_PROMPT = """
-你是一位顶级的商业短剧分镜师和导演。你的任务是将用户提供的故事大纲、风格和审核意见，拆解为符合电影工业标准的专业分镜表（Shot List）。
+你是一位顶级的商业短剧分镜师和导演。你的任务是将用户提供的故事大纲、风格和审核意见，拆解为符合好莱坞电影工业标准的专业分镜表（Shot List）。
 
 【绝对规则】：
 1. 你必须、且只能返回一个合法的 JSON 数组结构。
@@ -24,10 +24,12 @@ _SYSTEM_PROMPT = """
 [
   {
     "shot_id": "镜号，例如 '1', '2', '3'",
-    "scene": "场景描述，例如 '破旧的街头', '奢华的室内'",
-    "action": "动作描写，清晰描述角色在这个镜头内的物理动作和微表情",
+    "scene": "【场景环境 (Scene Setting)】：必须包含极具画面感的具体地点、物理细节与光影氛围（不得低于30字）。",
+    "camera": "【镜头景别 (Camera Angle)】：强制明确（远景/全景/中景/近景/特写）。",
+    "action": "【画面与动作描写 (Visual & Action Description)】：绝对铁律！绝对不能低于 50 个字。必须极其详细地描述物理动作、脸部微表情、互动道具和环境动态反馈。禁止出现类似『走动』这种干瘪词汇。",
+    "dialogue": "【台词与情绪】：清晰标注角色名与括号内的前置情绪。",
     "character": "画面主体角色，例如 '男主 李雷', '反派 赵四'",
-    "prompt": "一段详细的英文 Prompt，用于后续传递给视频大模型生成画面，包含机位、光影、画面主体和风格"
+    "prompt": "【英文提示词 (Prompt)】：强制将上述中文细节，扩写为包含摄像机参数、光线追踪、画面质感（如 8k, cinematic lighting）的专业英文生图 Prompt。"
   }
 ]
 
@@ -90,7 +92,7 @@ class ScriptBrainMicroDismantler:
                 if not isinstance(shots, list):
                     raise ValueError("The parsed JSON is not a list.")
                 for idx, shot in enumerate(shots):
-                    if not all(k in shot for k in ("shot_id", "scene", "action", "character", "prompt")):
+                    if not all(k in shot for k in ("shot_id", "scene", "camera", "action", "dialogue", "character", "prompt")):
                         raise ValueError(f"Shot at index {idx} is missing required schema keys.")
 
                 return shots
