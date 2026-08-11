@@ -11,7 +11,12 @@ from __future__ import annotations
 
 import argparse
 import sys
+import os
 from pathlib import Path
+
+# Enforce loading of the real API keys immediately upon start.
+from dotenv import load_dotenv
+load_dotenv(override=True)
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 

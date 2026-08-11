@@ -4,6 +4,12 @@ This file serves purely as an orchestrator to stitch together modularized UI com
 Never put complex UI logic or backend communication in this file.
 """
 
+import os
+from dotenv import load_dotenv
+
+# Enforce loading of the real API keys immediately upon start.
+load_dotenv(override=True)
+
 import gradio as gr
 from dashboard_modules.tabs import (
     render_scriptbrain_tab,

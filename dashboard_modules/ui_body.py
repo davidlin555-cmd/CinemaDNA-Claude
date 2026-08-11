@@ -3,24 +3,24 @@
 import gradio as gr
 
 def render_script_body():
-    """Renders the output container for the ScriptBrain."""
-    with gr.Row():
-        parse_btn = gr.Button("🎬 解析与拆解剧本 (Parse and Dismantle Script)", variant="primary")
-
+    """Renders the output container for the ScriptBrain.
+    Now optimized to live entirely in the Right Canvas (scale=3) of a Liblib-style topology.
+    """
     # State variable to hold the structured parsed output data
     script_data_state = gr.State([])
 
-    @gr.render(inputs=script_data_state)
-    def render_accordion(episodes_data):
-        """Native Accordion rendering utilizing Gradio 6 @gr.render"""
-        if not episodes_data:
-            gr.Markdown("📝 *等待拆解剧本...*")
-            return
+    with gr.Group():
+        @gr.render(inputs=script_data_state)
+        def render_accordion(episodes_data):
+            """Native Accordion rendering utilizing Gradio 6 @gr.render"""
+            if not episodes_data:
+                gr.Markdown("## 📝 等待剧本拆解...\n在左侧调整参数并点击生成。")
+                return
 
-        for ep_index, ep_shots in enumerate(episodes_data):
-            with gr.Accordion(label=f"📺 第 {ep_index + 1} 集", open=(ep_index == 0)):
-                for idx, shot in enumerate(ep_shots):
-                    markdown_content = f"""
+            for ep_index, ep_shots in enumerate(episodes_data):
+                with gr.Accordion(label=f"📺 第 {ep_index + 1} 集 分镜表", open=(ep_index == 0)):
+                    for idx, shot in enumerate(ep_shots):
+                        markdown_content = f"""
 ### 🎬 【场景 {idx+1}】
 {shot.get('scene', '未知场景')}
 
@@ -35,10 +35,10 @@ def render_script_body():
 
 *   **📝 【英文提示词 Prompt】**
     *{shot.get('prompt', '')}*
-                    """
-                    gr.Markdown(markdown_content)
+                        """
+                        gr.Markdown(markdown_content)
 
-    return parse_btn, script_data_state
+    return script_data_state
 
 def render_dna_forge_body():
     """Renders the DNA forge core interaction area."""

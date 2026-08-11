@@ -21,13 +21,18 @@ from .ui_footer import create_gatekeeper_ui
 
 def render_scriptbrain_tab():
     with gr.Tab("📝 剧本中枢 (ScriptBrain)"):
-        # Header (Inputs)
-        script_outline, style_dropdown, aspect_dropdown, episode_dropdown = render_scriptbrain_header()
+        with gr.Row():
+            # Left Panel: Controls
+            with gr.Column(scale=1):
+                script_outline, style_dropdown, aspect_dropdown, episode_dropdown = render_scriptbrain_header()
+                # Ensure the Generate button is massive and sits at the bottom of the left column
+                parse_btn = gr.Button("🎬 解析与拆解剧本 (Parse and Dismantle Script)", variant="primary", size="lg")
 
-        # Body (Action and Output)
-        parse_btn, script_rich_output = render_script_body()
+            # Right Panel: Output Canvas
+            with gr.Column(scale=3):
+                script_rich_output = render_script_body()
 
-        # Footer (Gatekeeper UI)
+        # Floating Footer: Gatekeeper components
         gate_feedback, approve_btn, reject_btn = create_gatekeeper_ui()
 
         # Wire callbacks
