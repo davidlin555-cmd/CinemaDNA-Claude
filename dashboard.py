@@ -1,9 +1,25 @@
 import gradio as gr
 import pandas as pd
+import requests
+import traceback
+
+# Engine endpoint URL
+ENGINE_URL = "http://127.0.0.1:8700"
+
+def _post_to_engine(endpoint: str, payload: dict) -> dict:
+    """Utility to post data to the local acting engine API."""
+    try:
+        response = requests.post(f"{ENGINE_URL}{endpoint}", json=payload)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Engine connection failed: {str(e)}")
 
 # Dummy functions for callbacks
-def parse_script(outline, style):
-    # Dummy dataframe data
+def parse_script(outline, style, progress=gr.Progress()):
+    progress(0.5, desc="Parsing script...")
+    # Simulated structure returned by ScriptBrain
     df = pd.DataFrame({
         "镜号": ["1", "2"],
         "场景": ["街头", "室内"],
@@ -11,23 +27,75 @@ def parse_script(outline, style):
         "角色": ["主角", "配角"],
         "提示词": ["A person walking on the street", "Someone sitting in a room"]
     })
+    progress(1.0, desc="Done")
     return df
 
-def generate_character(attributes):
-    # Dummy gallery output (empty list of images)
-    return []
+def generate_character(attributes, progress=gr.Progress()):
+    progress(0.2, desc="Requesting Identity Generation...")
+    try:
+        # Call the injected mock API
+        result = _post_to_engine("/api/v1/identity", {"attributes": attributes})
+        image_url = result.get("data", {}).get("image_url")
+        progress(1.0, desc="Asset Received")
+        if image_url:
+            return [image_url]  # gr.Gallery strictly expects a list of URLs/paths
+        return []
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to generate character: {e}")
 
-def generate_scene(attributes):
-    return []
+def generate_scene(attributes, progress=gr.Progress()):
+    progress(0.2, desc="Requesting Scene Generation...")
+    try:
+        # Assuming the orchestrator eventually implements /api/v1/scene
+        # For now, simulate the request.
+        # result = _post_to_engine("/api/v1/scene", {"attributes": attributes})
+        # image_url = result.get("data", {}).get("image_url")
+        import time
+        time.sleep(2)
+        image_url = "https://via.placeholder.com/600x400.png?text=Mock+Scene"
+        progress(1.0, desc="Asset Received")
+        if image_url:
+            return [image_url]
+        return []
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to generate scene: {e}")
 
 def lock_assets():
     return None
 
-def render_shot(prompt, transition):
-    return None # Return dummy video path if possible, or None
+def render_shot(prompt, transition, progress=gr.Progress()):
+    progress(0.2, desc="Rendering Shot...")
+    try:
+        # Simulate video rendering API call
+        # result = _post_to_engine("/api/v1/render", {"prompt": prompt, "transition": transition})
+        # video_url = result.get("data", {}).get("video_url")
+        import time
+        time.sleep(2)
+        # Using a public sample video URL for demonstration purposes
+        video_url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
+        progress(1.0, desc="Render Complete")
+        return video_url # gr.Video expects a string URL or local path
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to render shot: {e}")
 
-def assemble_final():
-    return None
+def assemble_final(progress=gr.Progress()):
+    progress(0.2, desc="Assembling Final Video...")
+    try:
+        # Simulate final assembly API call
+        # result = _post_to_engine("/api/v1/assemble", {})
+        # video_url = result.get("data", {}).get("video_url")
+        import time
+        time.sleep(3)
+        # Using a public sample video URL for demonstration purposes
+        video_url = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        progress(1.0, desc="Assembly Complete")
+        return video_url # gr.Video expects a string URL or local path
+    except Exception as e:
+        traceback.print_exc()
+        raise gr.Error(f"Failed to assemble final video: {e}")
 
 with gr.Blocks(title="DramaOS - Hollywood Director's Console") as demo:
     gr.Markdown("# DramaOS 导播台 (Director's Console)")
